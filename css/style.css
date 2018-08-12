@@ -1,0 +1,86 @@
+.dashboard {
+  margin: 100px;
+}
+
+.playlist {
+  background: #fff;
+  box-shadow: inset 0 0 10px #666;
+  height: 300px;
+  width: 500px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin: 16px 0;
+}
+
+.playlist .list-item {
+  height: 25px;
+  padding: 0 10px;
+  line-height: 25px;
+  background-color: transparent;
+  transition: background-color .2s;
+  position: relative;
+  white-space: nowrap;
+}
+.playlist .list-item:hover {
+  background-color: #0002;
+  transition: background-color .2s;
+}
+.playlist .list-item.playing {
+  color: blue;
+}
+
+.playlist .list-item .remove {
+  display: inline-block;
+  height: 25px;
+  padding: 0 10px;
+  line-height: 25px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+  transition: color .2s;
+}
+.playlist .list-item .remove:hover {
+  color: red;
+  transition: color .2s;
+}
+.playlist .list-item .play {
+  display: inline-block;
+  height: 25px;
+  padding: 0 10px;
+  line-height: 25px;
+  position: absolute;
+  top: 0;
+  right: 20px;
+  cursor: pointer;
+  transition: color .2s;
+}
+.playlist .list-item .play:hover {
+  color: green;
+  transition: color .2s;
+}
+
+
+.hide {
+  display: none;
+}
+
+body, html {
+  padding: 0;
+  margin: 0;
+}
+
+.stage {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+.stage .spectrum-bou {
+  display: inline-block;
+  width: 10px;
+  vertical-align: middle;
+  background-color: #66ccff;
+}
