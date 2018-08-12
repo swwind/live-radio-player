@@ -46,6 +46,22 @@ class Controller {
       div.appendChild(input);
       return div;
     }
+    if (config.type === 'string') {
+      const div = document.createElement('div');
+      div.classList.add('c-string');
+      const span = document.createElement('span');
+      span.innerText = config.name + ': ';
+      const input = document.createElement('input');
+      input.setAttribute('type', 'string');
+      input.value = config.default;
+      input.addEventListener('input', (e) => {
+        config.onChange(e.target.value);
+      });
+      config.onChange(input.value);
+      div.appendChild(span);
+      div.appendChild(input);
+      return div;
+    }
     if (config.type === 'number') {
       const div = document.createElement('div');
       div.classList.add('c-number');
@@ -74,7 +90,8 @@ class Controller {
       select.addEventListener('input', (e) => {
         config.onChange(config.options[e.target.selectedIndex]);
       });
-      config.onChange(config.options[0]);
+      select.selectedIndex = config.default;
+      config.onChange(config.options[config.default]);
       div.appendChild(select);
       return div;
     }

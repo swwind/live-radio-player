@@ -7,13 +7,14 @@
 </head>
 <body>
   <div class="dashboard">
-    <p>Press 'E' toggle bashboard</p>
+    <p>Press 'Ctrl + E' toggle bashboard</p>
     <h3>Play List</h3>
     <input type="file" multiple="multiple" id="add-music" accept="audio/*">
     <input type="button" value="Add" id="add-music-btn">
     <span>or simply drag & drop files on this page...</span>
     <div class="playlist"></div>
-    <input type="button" value="stop playing" id="stop-play">
+    <input type="button" value="skip" id="skip-play">
+    <input type="button" value="stop" id="stop-play">
     <h3>Effects</h3>
     <input type="button" value="Add one...">
     <div class="configs"></div>
@@ -25,6 +26,7 @@
   <script type="text/javascript" src="/js/ts/Controller.js"></script>
   <script type="text/javascript" src="/js/ts/Viewer.js"></script>
   <script type="text/javascript" src="/js/ts/Spectrum.js"></script>
+  <script type="text/javascript" src="/js/ts/ImageComp.js"></script>
   <script type="text/javascript" src="/js/index.js"></script>
 </body>
 </html>

@@ -8,3 +8,50 @@ const resolveTime = (m) => {
 const padStart = (n, m) => {
   return '0'.repeat(m - n.toString().length) + n;
 }
+
+// [0, n)
+const rand = (n) => {
+  return Math.floor(Math.random() * n);
+}
+
+// [a, b]
+const xrand = (a, b) => {
+  return a + rand(b - a + 1);
+}
+
+const parseCover = (data) => {
+  if (data.substr(0, 3) !== 'ID3') {
+    return false;
+  }
+  const index = data.indexOf('APIC');
+  if (index < 0) {
+    return false;
+  }
+  const calc = (code) => {
+    const res = code.charCodeAt(0) * 0x1000000
+              + code.charCodeAt(1) * 0x10000
+              + code.charCodeAt(2) * 0x100
+              + code.charCodeAt(3) * 0x1;
+    return res;
+  }
+  const filesize = calc(data.substr(index + 4, 4));
+  const pic1 = data.substr(index + 10, filesize);
+  const pic2 = pic1.slice(pic1.indexOf('\xff\xd8'));
+  return 'data:image/jpeg;base64,' + btoa(pic2);
+}
+
+class CssController {
+  constructor() {
+    this.elem = document.createElement('style');
+    this.props = new Map();
+    document.head.appendChild(this.elem);
+  }
+  set(key, value) {
+    this.props.set(key, value);
+    this.render();
+  }
+  render() {
+    this.elem.innerHTML = ':root{' + Array.from(this.props).map(([key, value]) => `${key}:${value}`).join(';') + '}';
+  }
+}
+

@@ -1,38 +1,55 @@
 'use strict';
 
 class Spectrum {
-  constructor(x, y) {
-    this.x = x;
-    this.y = y;
+  constructor() {
     this.elem = document.createElement('div');
     this.elem.classList.add('spectrum');
+    this.elem.classList.add('comp');
     this.bous = [];
     this.exampleBou = document.createElement('div');
     this.exampleBou.classList.add('spectrum-bou');
-    for (let i = 0; i < spectrumSize; ++ i) {
-      this.addBou();
-    }
     this.controller = new Controller([{
       name: 'Spectrum Configurations',
       type: 'panel',
       value: [{
+        name: 'X',
+        type: 'string',
+        default: '0px',
+        onChange: (value) => {
+          this.elem.style.top = value;
+        }
+      }, {
+        name: 'Y',
+        type: 'string',
+        default: '0px',
+        onChange: (value) => {
+          this.elem.style.left = value;
+        }
+      }, {
         name: 'Main Color',
         type: 'color',
         default: '#66ccff',
         onChange: (value) => {
+          this.exampleBou.style.backgroundColor = value;
           this.bous.forEach((bou) => {
             bou.style.backgroundColor = value;
           });
-          this.exampleBou.style.backgroundColor = value;
         }
       }, {
         name: 'Spectrum Height',
-        type: 'number',
-        default: 300,
+        type: 'string',
+        default: '200px',
         onChange: (value) => {
-          this.spectrumHeight = value;
-          this.elem.style.height = value + 'px';
-          this.elem.style.lineHeight = value + 'px';
+          this.spectrumHeight = parseFloat(value);
+          this.elem.style.height = value;
+          this.elem.style.lineHeight = value;
+        }
+      }, {
+        name: 'Spectrum Width',
+        type: 'string',
+        default: '1000px',
+        onChange: (value) => {
+          this.elem.style.width = value;
         }
       }, {
         name: 'Spectrum Size',
@@ -40,51 +57,27 @@ class Spectrum {
         default: 64,
         onChange: (value) => {
           this.adjustSpectrumSize(value);
-          this.spectrumSize = value;
-        }
-      }, {
-        name: 'Spectrum Width',
-        type: 'number',
-        default: 10,
-        onChange: (value) => {
-          this.bous.forEach((bou) => {
-            bou.style.width = value + 'px';
-          });
-          this.exampleBou.style.width = value + 'px';
-        }
-      }, {
-        name: 'Spectrum Margin',
-        type: 'number',
-        default: 2,
-        onChange: (value) => {
-          this.bous.forEach((bou) => {
-            bou.style.margin = value + 'px';
-          });
-          this.exampleBou.style.margin = value + 'px';
         }
       }, {
         name: 'Spectrum Border-Radius',
-        type: 'number',
-        default: 5,
+        type: 'string',
+        default: '5px',
         onChange: (value) => {
           this.bous.forEach((bou) => {
-            bou.style.borderRadius = value + 'px';
+            bou.style.borderRadius = value;
           });
-          this.exampleBou.style.borderRadius = value + 'px';
+          this.exampleBou.style.borderRadius = value;
         }
       }, {
         name: 'Spectrum Align',
         type: 'select',
-        options: ['left', 'center', 'right'],
+        options: ['flex-start', 'flex-end', 'center'],
+        default: 2,
         onChange: (value) => {
-          this.elem.style.textAlign = value;
+          this.elem.style.alignItems = value;
         }
       }]
     }]);
-  }
-  setPosition(x, y) {
-    this.x = x;
-    this.y = y;
   }
   getElement() {
     return this.elem;
@@ -93,16 +86,8 @@ class Spectrum {
     this.elem.remove();
   }
   adjustSpectrumSize(now) {
-    if (now > this.spectrumSize) {
-      for (let i = this.spectrumSize; i < now; ++ i) {
-        this.addBou();
-      }
-    }
-    if (now < this.spectrumSize) {
-      for (let i = this.spectrumSize; i > now; -- i) {
-        this.removeBou();
-      }
-    }
+    while (this.bous.length < now) this.addBou();
+    while (this.bous.length > now) this.removeBou();
   }
   addBou() {
     const bou = this.exampleBou.cloneNode();
@@ -113,7 +98,7 @@ class Spectrum {
     this.bous.shift().remove();
   }
   render({ frequency }) {
-    window.spectrumSize = this.spectrumSize;
+    window.spectrumSize = this.bous.length;
     window.spectrumHeight = this.spectrumHeight;
     const spectrum = getTransformedSpectrum(frequency);
     this.bous.forEach((bou, i) => {

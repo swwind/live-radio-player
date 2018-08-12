@@ -2,6 +2,7 @@
 
 const $ = (name) => document.querySelector(name);
 const $$ = (name) => document.getElementById(name);
+const cssc = new CssController();
 
 const dashboard = $('.dashboard');
 const playList = new Map();
@@ -25,10 +26,21 @@ const playTrack = (token) => {
     source = audioContext.createBufferSource();
     source.connect(analyser);
     source.buffer = buffer;
+    source.onended = (e) => {
+      playNext(token);
+    }
     source.start(0);
     playingToken = token;
     $$(token).classList.add('playing');
   })
+}
+
+let stoped = false;
+const playNext = (token) => {
+  if (stoped) return stoped = false;
+  const elem = $$(token);
+  const nextNode = (elem && elem.nextElementSibling) ? elem.nextElementSibling : $('.playlist').firstChild;
+  return playTrack(nextNode.getAttribute('id'));
 }
 
 const addTrack = (file) => {
@@ -49,7 +61,7 @@ const addTrack = (file) => {
   div.appendChild(span2);
   const span3 = document.createElement('span');
   span3.classList.add('play');
-  span3.innerHTML = '|>';
+  span3.innerHTML = '+';
   span3.addEventListener('click', (e) => {
     playTrack(token);
   });
@@ -63,13 +75,18 @@ const removeTrack = (token) => {
 
 const openFile = (file, callback) => {
   var reader = new FileReader();
+  var reader2 = new FileReader();
   reader.onload = (e) => {
     audioContext.decodeAudioData(e.target.result, callback, console.error);
   };
+  reader2.onload = (e) => {
+    cssc.set('--album-cover', 'url(' + parseCover(e.target.result) + ')');
+  }
   reader.readAsArrayBuffer(file);
+  reader2.readAsBinaryString(file);
 }
 
-const stop = () => {
+const skip = () => {
   if (source) {
     source.stop(0);
     source = null;
@@ -79,8 +96,14 @@ const stop = () => {
   }
 }
 
+const stop = () => {
+  stoped = true;
+  skip();
+}
+
 window.addEventListener('keydown', (e) => {
-  if (e.code === 'KeyE') {
+  if (e.ctrlKey && e.code === 'KeyE') {
+    e.preventDefault();
     dashboard.classList.toggle('hide');
   }
 });
@@ -104,6 +127,7 @@ document.addEventListener('drop', (e) => {
     }
   } 
 });
+$('#skip-play').addEventListener('click', skip);
 $('#stop-play').addEventListener('click', stop);
 
 const viewer = new Viewer(document.body);
@@ -116,6 +140,7 @@ const draw = (time) => {
 draw();
 
 viewer.addComp(window.ass = new Spectrum());
+viewer.addComp(new ImageComp());
 
 
 
