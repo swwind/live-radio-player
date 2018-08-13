@@ -23,10 +23,20 @@ class Viewer {
   }
   render(state) {
     state.frequency = state.frequency;
-    state.audioLength = resolveTime(state.audioLength);
+    state.duration = resolveTime(state.duration);
     state.progress = resolveTime(state.progress);
     this.comps.forEach((comp) => {
       comp.render(state);
+    });
+  }
+  exportConfig() {
+    return JSON.stringify(this.comps.map((comp) => Array.from(comp.getConfig())));
+  }
+  importConfig(configs) {
+    const arr = JSON.parse(configs);
+    arr.forEach((item) => {
+      const map = new Map(item);
+      this.addComp(eval(`new ${map.get('name')}(map)`));
     });
   }
 }

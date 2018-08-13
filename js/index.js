@@ -15,6 +15,9 @@ analyser.connect(audioContext.destination);
 
 let source = null;
 let playingToken;
+let trackName;
+let duration;
+let startedTime;
 
 const playTrack = (token) => {
   const file = playList.get(token);
@@ -32,7 +35,10 @@ const playTrack = (token) => {
     source.start(0);
     playingToken = token;
     $$(token).classList.add('playing');
-  })
+    trackName = file.name.replace(/\.\S+$/i, '');
+    duration = buffer.duration;
+    startedTime = new Date();
+  });
 }
 
 let stoped = false;
@@ -129,18 +135,26 @@ document.addEventListener('drop', (e) => {
 });
 $('#skip-play').addEventListener('click', skip);
 $('#stop-play').addEventListener('click', stop);
+$('#add-effect').addEventListener('click', (e) => {
+  viewer.addComp(eval(`new ${$('#effect-type').selectedOptions[0].value}()`));
+})
 
 const viewer = new Viewer(document.body);
 
 const draw = (time) => {
   analyser.getByteFrequencyData(frequency);
-  viewer.render({ frequency });
+  viewer.render({ frequency, trackName, duration, progress: (new Date() - startedTime) / 1000 });
   requestAnimationFrame(draw);
 }
 draw();
 
-viewer.addComp(window.ass = new Spectrum());
-viewer.addComp(new ImageComp());
+if (localStorage.getItem('viewer cache')) {
+  viewer.importConfig(localStorage.getItem('viewer cache'));
+}
+
+setInterval(() => {
+  localStorage.setItem('viewer cache', viewer.exportConfig());
+}, 1000);
 
 
 

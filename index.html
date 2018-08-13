@@ -16,7 +16,12 @@
     <input type="button" value="skip" id="skip-play">
     <input type="button" value="stop" id="stop-play">
     <h3>Effects</h3>
-    <input type="button" value="Add one...">
+    <select id="effect-type">
+      <option value="Spectrum">Spectrum</option>
+      <option value="ImageComp">Image</option>
+      <option value="TextComp">Text</option>
+    </select>
+    <input type="button" value="Add" id="add-effect">
     <div class="configs"></div>
   </div>
   <script type="text/javascript" src="/js/util.js"></script>
@@ -26,6 +31,7 @@
   <script type="text/javascript" src="/js/ts/Controller.js"></script>
   <script type="text/javascript" src="/js/ts/Viewer.js"></script>
   <script type="text/javascript" src="/js/ts/Spectrum.js"></script>
+  <script type="text/javascript" src="/js/ts/TextComp.js"></script>
   <script type="text/javascript" src="/js/ts/ImageComp.js"></script>
   <script type="text/javascript" src="/js/index.js"></script>
 </body>

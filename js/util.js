@@ -1,8 +1,9 @@
 'use strict';
 
 const resolveTime = (m) => {
-  if (m === undefined) return '--:--';
-  return padStart(Math.floor(m / 60)) + ':' + padStart(m % 60);
+  if (m === undefined || isNaN(m)) return '--:--';
+  const rm = Math.round(m);
+  return padStart(Math.floor(rm / 60), 2) + ':' + padStart(rm % 60, 2);
 }
 
 const padStart = (n, m) => {

@@ -1,11 +1,14 @@
 'use strict';
 
 class Controller {
-  constructor(config) {
+  constructor(name, config, oldConfig) {
     if (!config) {
       throw 'java.lang.ArrayIndexOutOfBoundsException';
     }
     this._events = [];
+    this._config = new Map();
+    this._config.set('name', name);
+    this._oldConfig = oldConfig;
     this.elem = this.config2elem(config);
   }
   config2elem(config) {
@@ -37,10 +40,12 @@ class Controller {
       span.innerText = config.name + ': ';
       const input = document.createElement('input');
       input.setAttribute('type', 'color');
-      input.value = config.default;
+      input.value = (this._oldConfig.get(config.name) || config.default);
       input.addEventListener('input', (e) => {
+        this._config.set(config.name, e.target.value);
         config.onChange(e.target.value);
       });
+      this._config.set(config.name, input.value);
       config.onChange(input.value);
       div.appendChild(span);
       div.appendChild(input);
@@ -53,13 +58,32 @@ class Controller {
       span.innerText = config.name + ': ';
       const input = document.createElement('input');
       input.setAttribute('type', 'string');
-      input.value = config.default;
+      input.value = (this._oldConfig.get(config.name) || config.default);
       input.addEventListener('input', (e) => {
+        this._config.set(config.name, e.target.value);
         config.onChange(e.target.value);
       });
+      this._config.set(config.name, input.value);
       config.onChange(input.value);
       div.appendChild(span);
       div.appendChild(input);
+      return div;
+    }
+    if (config.type === 'multistring') {
+      const div = document.createElement('div');
+      div.classList.add('c-multistring');
+      const span = document.createElement('span');
+      span.innerText = config.name + ': ';
+      const textarea = document.createElement('textarea');
+      textarea.value = (this._oldConfig.get(config.name) || config.default);
+      textarea.addEventListener('input', (e) => {
+        this._config.set(config.name, e.target.value);
+        config.onChange(e.target.value);
+      });
+      this._config.set(config.name, textarea.value);
+      config.onChange(textarea.value);
+      div.appendChild(span);
+      div.appendChild(textarea);
       return div;
     }
     if (config.type === 'number') {
@@ -70,10 +94,12 @@ class Controller {
       const input = document.createElement('input');
       input.setAttribute('type', 'number');
       input.setAttribute('step', 'any');
-      input.value = config.default;
+      input.value = (this._oldConfig.get(config.name) || config.default);
       input.addEventListener('input', (e) => {
+        this._config.set(config.name, e.target.value);
         config.onChange(e.target.value);
       });
+      this._config.set(config.name, input.value);
       config.onChange(input.value);
       div.appendChild(span);
       div.appendChild(input);
@@ -88,16 +114,21 @@ class Controller {
         select.innerHTML += `<option>${opt}</option>`;
       });
       select.addEventListener('input', (e) => {
+        this._config.set(config.name, e.target.selectedIndex);
         config.onChange(config.options[e.target.selectedIndex]);
       });
-      select.selectedIndex = config.default;
-      config.onChange(config.options[config.default]);
+      select.selectedIndex = (this._oldConfig.has(config.name) ? this._oldConfig.get(config.name) : config.default);
+      this._config.set(config.name, select.selectedIndex);
+      config.onChange(config.options[select.selectedIndex]);
       div.appendChild(select);
       return div;
     }
   }
   getElement() {
     return this.elem;
+  }
+  getConfig() {
+    return this._config;
   }
 }
 

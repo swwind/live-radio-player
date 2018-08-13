@@ -1,12 +1,12 @@
 'use strict';
 
-class ImageComp {
+class TextComp {
   constructor(config) {
     this.elem = document.createElement('div');
-    this.elem.classList.add('image');
+    this.elem.classList.add('text');
     this.elem.classList.add('comp');
-    this.controller = new Controller('ImageComp', {
-      name: 'Image Configurations',
+    this.controller = new Controller('TextComp', {
+      name: 'Text Configurations',
       type: 'panel',
       value: [{
         name: 'X',
@@ -23,18 +23,11 @@ class ImageComp {
           this.elem.style.left = value;
         }
       }, {
-        name: 'Background Image',
-        type: 'string',
-        default: 'var(--album-cover)',
+        name: 'Value',
+        type: 'multistring',
+        default: '%trackName% (%progress% / %duration%)',
         onChange: (value) => {
-          this.elem.style.backgroundImage = value;
-        }
-      }, {
-        name: 'Background Color',
-        type: 'color',
-        default: '#fff',
-        onChange: (value) => {
-          this.elem.style.backgroundColor = value;
+          this.text = value;
         }
       }, {
         name: 'Height',
@@ -46,16 +39,30 @@ class ImageComp {
       }, {
         name: 'Width',
         type: 'string',
-        default: '200px',
+        default: '1000px',
         onChange: (value) => {
           this.elem.style.width = value;
         }
       }, {
-        name: 'Radius',
-        type: 'string',
-        default: '50%',
+        name: 'Color',
+        type: 'color',
+        default: '#000000',
         onChange: (value) => {
-          this.elem.style.borderRadius = value;
+          this.elem.style.color = value;
+        }
+      }, {
+        name: 'Font Size',
+        type: 'string',
+        default: '16px',
+        onChange: (value) => {
+          this.elem.style.fontSize = value;
+        }
+      }, {
+        name: 'Font Family',
+        type: 'string',
+        default: 'Arial',
+        onChange: (value) => {
+          this.elem.style.fontFamily = value;
         }
       }]
     }, config || new Map());
@@ -69,5 +76,8 @@ class ImageComp {
   getConfig() {
     return this.controller.getConfig();
   }
-  render() { }
+  render(cfg) {
+    const text = this.text.replace(/%[^%]+%/g, (t) => cfg[t.slice(1, t.length - 1)]);
+    this.elem.innerText = text;
+  }
 }
