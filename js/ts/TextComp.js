@@ -77,7 +77,10 @@ class TextComp {
     return this.controller.getConfig();
   }
   render(cfg) {
-    const text = this.text.replace(/%[^%]+%/g, (t) => cfg[t.slice(1, t.length - 1)]);
+    const text = this.text.replace(/%[^%]+%/g, (t) => {
+      const name = t.slice(1, t.length - 1);
+      return cfg[name] || cfg.trackInfo[name] || "N/A";
+    });
     this.elem.innerText = text;
   }
 }

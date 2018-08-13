@@ -41,6 +41,49 @@ const parseCover = (data) => {
   return 'data:image/jpeg;base64,' + btoa(pic2);
 }
 
+const parseString = (tag) => (data) => {
+  if (data.substr(0, 3) !== 'ID3') {
+    return false;
+  }
+  const index = data.indexOf(tag);
+  if (index < 0) {
+    return false;
+  }
+  const calc = (code) => {
+    const res = code.charCodeAt(0) * 0x1000000
+              + code.charCodeAt(1) * 0x10000
+              + code.charCodeAt(2) * 0x100
+              + code.charCodeAt(3) * 0x1;
+    return res;
+  }
+  const getEncodeFormat = (code) => {
+    switch (code) {
+      case '\x00': return 'ISO-8859-1';
+      case '\x01': return 'UCS-2';
+      case '\x02': return 'UTF-16BE';
+      case '\x03': return 'UTF-8';
+    }
+  }
+  const filesize = calc(data.substr(index + 4, 4));
+  const title = data.substr(index + 10, filesize);
+  const encodeFormat = getEncodeFormat(title.charAt(0));
+  const array = Array.from(title).slice(1).map(c => c.charCodeAt(0));
+  return new TextDecoder(encodeFormat).decode(new Uint8Array(array));
+}
+
+const parseAlbum  = parseString('TALB');
+const parseTitle  = parseString('TIT2');
+const parseAuthor = parseString('TPE1');
+
+const parseTrackInfo = (data) => {
+  return {
+    cover: parseCover(data),
+    title: parseTitle(data),
+    album: parseAlbum(data),
+    author: parseAuthor(data),
+  }
+}
+
 class CssController {
   constructor() {
     this.elem = document.createElement('style');

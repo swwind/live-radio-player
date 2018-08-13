@@ -15,9 +15,10 @@ analyser.connect(audioContext.destination);
 
 let source = null;
 let playingToken;
-let trackName;
+let trackInfo = {};
 let duration;
 let startedTime;
+let stoped = true;
 
 const playTrack = (token) => {
   const file = playList.get(token);
@@ -26,24 +27,20 @@ const playTrack = (token) => {
   }
   openFile(file, (buffer) => {
     source && stop();
+    stoped = false;
     source = audioContext.createBufferSource();
     source.connect(analyser);
     source.buffer = buffer;
-    source.onended = (e) => {
-      playNext(token);
-    }
     source.start(0);
     playingToken = token;
     $$(token).classList.add('playing');
-    trackName = file.name.replace(/\.\S+$/i, '');
     duration = buffer.duration;
     startedTime = new Date();
   });
 }
 
-let stoped = false;
 const playNext = (token) => {
-  if (stoped) return stoped = false;
+  stoped = true;
   const elem = $$(token);
   const nextNode = (elem && elem.nextElementSibling) ? elem.nextElementSibling : $('.playlist').firstChild;
   return playTrack(nextNode.getAttribute('id'));
@@ -86,13 +83,16 @@ const openFile = (file, callback) => {
     audioContext.decodeAudioData(e.target.result, callback, console.error);
   };
   reader2.onload = (e) => {
-    cssc.set('--album-cover', 'url(' + parseCover(e.target.result) + ')');
+    const res = parseTrackInfo(e.target.result);
+    cssc.set('--album-cover', 'url(' + res.cover + ')');
+    trackInfo = res;
   }
   reader.readAsArrayBuffer(file);
   reader2.readAsBinaryString(file);
 }
 
-const skip = () => {
+const stop = () => {
+  stoped = true;
   if (source) {
     source.stop(0);
     source = null;
@@ -100,11 +100,6 @@ const skip = () => {
       $$(playingToken).classList.remove('playing');
     }
   }
-}
-
-const stop = () => {
-  stoped = true;
-  skip();
 }
 
 window.addEventListener('keydown', (e) => {
@@ -133,7 +128,7 @@ document.addEventListener('drop', (e) => {
     }
   } 
 });
-$('#skip-play').addEventListener('click', skip);
+$('#skip-play').addEventListener('click', () => playNext(playingToken));
 $('#stop-play').addEventListener('click', stop);
 $('#add-effect').addEventListener('click', (e) => {
   viewer.addComp(eval(`new ${$('#effect-type').selectedOptions[0].value}()`));
@@ -143,7 +138,11 @@ const viewer = new Viewer(document.body);
 
 const draw = (time) => {
   analyser.getByteFrequencyData(frequency);
-  viewer.render({ frequency, trackName, duration, progress: (new Date() - startedTime) / 1000 });
+  const progress = (new Date() - startedTime) / 1000;
+  viewer.render({ frequency, trackInfo, duration, progress });
+  if (!stoped && progress > duration) {
+    playNext(playingToken);
+  }
   requestAnimationFrame(draw);
 }
 draw();

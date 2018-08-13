@@ -40,7 +40,7 @@ class Controller {
       span.innerText = config.name + ': ';
       const input = document.createElement('input');
       input.setAttribute('type', 'color');
-      input.value = (this._oldConfig.get(config.name) || config.default);
+      input.value = (this._oldConfig.has(config.name) ? this._oldConfig.get(config.name) : config.default);
       input.addEventListener('input', (e) => {
         this._config.set(config.name, e.target.value);
         config.onChange(e.target.value);
@@ -58,7 +58,7 @@ class Controller {
       span.innerText = config.name + ': ';
       const input = document.createElement('input');
       input.setAttribute('type', 'string');
-      input.value = (this._oldConfig.get(config.name) || config.default);
+      input.value = (this._oldConfig.has(config.name) ? this._oldConfig.get(config.name) : config.default);
       input.addEventListener('input', (e) => {
         this._config.set(config.name, e.target.value);
         config.onChange(e.target.value);
@@ -75,7 +75,7 @@ class Controller {
       const span = document.createElement('span');
       span.innerText = config.name + ': ';
       const textarea = document.createElement('textarea');
-      textarea.value = (this._oldConfig.get(config.name) || config.default);
+      textarea.value = (this._oldConfig.has(config.name) ? this._oldConfig.get(config.name) : config.default);
       textarea.addEventListener('input', (e) => {
         this._config.set(config.name, e.target.value);
         config.onChange(e.target.value);
@@ -94,7 +94,7 @@ class Controller {
       const input = document.createElement('input');
       input.setAttribute('type', 'number');
       input.setAttribute('step', 'any');
-      input.value = (this._oldConfig.get(config.name) || config.default);
+      input.value = (this._oldConfig.has(config.name) ? this._oldConfig.get(config.name) : config.default);
       input.addEventListener('input', (e) => {
         this._config.set(config.name, e.target.value);
         config.onChange(e.target.value);
