@@ -15,7 +15,6 @@ class ImageComp {
     };
     this.controller = new Controller({
       name: 'Image Configurations',
-      type: 'panel',
       value: [{
         name: 'X',
         type: 'string',

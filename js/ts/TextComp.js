@@ -7,7 +7,6 @@ class TextComp {
     this.elem.classList.add('comp');
     this.controller = new Controller({
       name: 'Text Configurations',
-      type: 'panel',
       value: [{
         name: 'X',
         type: 'string',

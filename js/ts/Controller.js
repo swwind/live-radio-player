@@ -7,9 +7,13 @@ class Controller {
     }
     this._events = [];
     this._config = new Map();
-    this._config.set('name', name);
     this._oldConfig = oldConfig;
-    this.elem = this.config2elem(config);
+    const configs = [{
+      name: 'Alias',
+      type: 'string',
+      default: 'My ' + config.name
+    }, ...config.value];
+    this.elem = new SubWindow(config.name, this.config2elem(configs));
   }
   getDefault(name, defaultValue) {
     return this._oldConfig.has(name) ? this._oldConfig.get(name) : defaultValue;
@@ -26,16 +30,6 @@ class Controller {
       });
       return div;
     }
-    if (config.type === 'panel') {
-      const div = document.createElement('div');
-      div.classList.add('c-panel');
-      const h3 = document.createElement('h3');
-      h3.innerText = config.name;
-      div.appendChild(h3);
-      const child = this.config2elem(config.value);
-      div.appendChild(child);
-      return div;
-    }
     if (config.type === 'color') {
       const div = document.createElement('div');
       div.classList.add('c-color');
@@ -46,10 +40,10 @@ class Controller {
       input.value = this.getDefault(config.name, config.default);
       input.addEventListener('input', (e) => {
         this._config.set(config.name, e.target.value);
-        config.onChange(e.target.value);
+        config.onChange && config.onChange(e.target.value);
       });
       this._config.set(config.name, input.value);
-      config.onChange(input.value);
+      config.onChange && config.onChange(input.value);
       div.appendChild(span);
       div.appendChild(input);
       return div;
@@ -64,10 +58,10 @@ class Controller {
       input.value = this.getDefault(config.name, config.default);
       input.addEventListener('input', (e) => {
         this._config.set(config.name, e.target.value);
-        config.onChange(e.target.value);
+        config.onChange && config.onChange(e.target.value);
       });
       this._config.set(config.name, input.value);
-      config.onChange(input.value);
+      config.onChange && config.onChange(input.value);
       div.appendChild(span);
       div.appendChild(input);
       return div;
@@ -81,10 +75,10 @@ class Controller {
       textarea.value = this.getDefault(config.name, config.default);
       textarea.addEventListener('input', (e) => {
         this._config.set(config.name, e.target.value);
-        config.onChange(e.target.value);
+        config.onChange && config.onChange(e.target.value);
       });
       this._config.set(config.name, textarea.value);
-      config.onChange(textarea.value);
+      config.onChange && config.onChange(textarea.value);
       div.appendChild(span);
       div.appendChild(textarea);
       return div;
@@ -100,10 +94,10 @@ class Controller {
       input.value = this.getDefault(config.name, config.default);
       input.addEventListener('input', (e) => {
         this._config.set(config.name, e.target.value);
-        config.onChange(e.target.value);
+        config.onChange && config.onChange(e.target.value);
       });
       this._config.set(config.name, input.value);
-      config.onChange(input.value);
+      config.onChange && config.onChange(input.value);
       div.appendChild(span);
       div.appendChild(input);
       return div;
@@ -118,17 +112,17 @@ class Controller {
       });
       select.addEventListener('input', (e) => {
         this._config.set(config.name, e.target.selectedIndex);
-        config.onChange(config.options[e.target.selectedIndex]);
+        config.onChange && config.onChange(config.options[e.target.selectedIndex]);
       });
       select.selectedIndex = this.getDefault(config.name, config.default);
       this._config.set(config.name, select.selectedIndex);
-      config.onChange(config.options[select.selectedIndex]);
+      config.onChange && config.onChange(config.options[select.selectedIndex]);
       div.appendChild(select);
       return div;
     }
   }
   getElement() {
-    return this.elem;
+    return this.elem.getElement();
   }
   getConfig() {
     return this._config;

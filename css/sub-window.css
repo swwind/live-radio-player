@@ -1,0 +1,73 @@
+.sub-window {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  background: #eee;
+  box-shadow: 0 0 5px #ccc;
+  user-select: none;
+  transition: opacity .5s, box-shadow-color .5s;
+}
+.sub-window.moving {
+  opacity: .7;
+}
+.sub-window.sw-focus {
+  box-shadow: 0 0 5px #66ccff;
+}
+.sub-window .sw-statebar {
+  display: flex;
+  background: white;
+  min-height: 32px;
+  box-sizing: border-box;
+}
+.sub-window .sw-statebar .sw-title {
+  flex: 1;
+  cursor: move;
+  padding: 5px 10px;
+}
+.sub-window .sw-statebar .sw-close {
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: all .2s;
+  width: 32px;
+  text-align: center;
+}
+.sub-window .sw-statebar .sw-close:hover {
+  color: white;
+  background: red;
+  transition: all .2s;
+}
+.sub-window .sw-container {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.c-div > div {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 0 5px 0;
+}
+.c-div .c-multistring {
+  display: block;
+}
+.c-div .c-multistring textarea {
+  width: 100%;
+  min-width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  min-height: 100px;
+}
+.c-div input, .c-div select {
+  width: 50%;
+  box-sizing: border-box;
+}
+.c-div input, .c-div textarea, .c-div select {
+  outline: none;
+  padding: 4px 5px;
+  border: 1px solid #ccc;
+  transition: border-color .2s;
+}
+.c-div input:focus, .c-div textarea:focus {
+  border: 1px solid #666;
+  transition: border-color .2s;
+}

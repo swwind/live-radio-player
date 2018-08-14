@@ -20,69 +20,33 @@ const xrand = (a, b) => {
   return a + rand(b - a + 1);
 }
 
-const parseCover = (data) => {
-  if (data.substr(0, 3) !== 'ID3') {
-    return false;
-  }
-  const index = data.indexOf('APIC');
-  if (index < 0) {
-    return false;
-  }
-  const calc = (code) => {
-    const res = code.charCodeAt(0) * 0x1000000
-              + code.charCodeAt(1) * 0x10000
-              + code.charCodeAt(2) * 0x100
-              + code.charCodeAt(3) * 0x1;
-    return res;
-  }
-  const filesize = calc(data.substr(index + 4, 4));
-  const pic1 = data.substr(index + 10, filesize);
-  const pic2 = pic1.slice(pic1.indexOf('\xff\xd8'));
-  return 'data:image/jpeg;base64,' + btoa(pic2);
+const arrayToBase64 = (arr) => {
+  let res = '';
+  arr.forEach((c) => {
+    res += String.fromCharCode(c);
+  });
+  return btoa(res);
 }
 
-const parseString = (tag) => (data) => {
-  if (data.substr(0, 3) !== 'ID3') {
-    return false;
-  }
-  const index = data.indexOf(tag);
-  if (index < 0) {
-    return false;
-  }
-  const calc = (code) => {
-    const res = code.charCodeAt(0) * 0x1000000
-              + code.charCodeAt(1) * 0x10000
-              + code.charCodeAt(2) * 0x100
-              + code.charCodeAt(3) * 0x1;
-    return res;
-  }
-  const decodeString = (str) => {
-    const arr = Array.from(str).map(c => c.charCodeAt(0));
-    const code = arr.shift();
-    if (code === 0 && !arr[arr.length - 1]) {
-      arr.splice(-1, 1);
-    }
-    switch (code) {
-      case 0: return new TextDecoder('ISO-8859-1').decode(new Uint8Array(arr));
-      case 1: return new TextDecoder('UCS-2').decode(new Uint8Array(arr));
-      case 2: return new TextDecoder('UTF-16BE').decode(new Uint8Array(arr));
-      case 3: return new TextDecoder('UTF-8').decode(new Uint8Array(arr));
-    }
-  }
-  const filesize = calc(data.substr(index + 4, 4));
-  return decodeString(data.substr(index + 10, filesize));
+const encodeCover = (pic) => {
+  return pic ? 'data:' + pic.format + ';base64,' + arrayToBase64(pic.data) : '';
 }
 
-const parseAlbum  = parseString('TALB');
-const parseTitle  = parseString('TIT2');
-const parseAuthor = parseString('TPE1');
-
-const parseTrackInfo = (data) => {
-  const cover  = parseCover(data);
-  const album  = parseAlbum(data);
-  const title  = parseTitle(data) || album;
-  const author = parseAuthor(data);
-  return { cover, album, title, author };
+const parseTrackInfo = (file) => {
+  return new Promise((res, rej) => {
+    jsmediatags.read(file, {
+      onSuccess: (data) => {
+        const cover = encodeCover(data.tags.picture);
+        res({
+          cover: cover,
+          album: data.tags.album,
+          title: data.tags.title,
+          author: data.tags.artist
+        });
+      },
+      onError: rej
+    });
+  });
 }
 
 class CssController {

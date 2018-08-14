@@ -68,17 +68,14 @@ const removeTrack = (token) => {
 
 const openFile = (file, callback) => {
   var reader = new FileReader();
-  var reader2 = new FileReader();
   reader.onload = (e) => {
     audioContext.decodeAudioData(e.target.result, callback, console.error);
   };
-  reader2.onload = (e) => {
-    const res = parseTrackInfo(e.target.result);
+  reader.readAsArrayBuffer(file);
+  parseTrackInfo(file).then((res) => {
     cssc.set('--album-cover', 'url(' + res.cover + ')');
     trackInfo = res;
-  }
-  reader.readAsArrayBuffer(file);
-  reader2.readAsBinaryString(file);
+  });
 }
 
 const stop = () => {
@@ -123,9 +120,8 @@ $('#skip-play').addEventListener('click', () => playNext(playingToken));
 $('#stop-play').addEventListener('click', stop);
 $('#add-effect').addEventListener('click', (e) => {
   const effectType = $('#effect-type').selectedOptions[0].value;
-  viewer.addComp(eval(`new ${effectType}()`));
-
-})
+  viewer.addComp(new (Function('return ' + effectType)()));
+});
 
 const viewer = new Viewer(document.body);
 

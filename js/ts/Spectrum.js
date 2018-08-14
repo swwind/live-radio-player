@@ -10,7 +10,6 @@ class Spectrum {
     this.exampleBou.classList.add('spectrum-bou');
     this.controller = new Controller({
       name: 'Spectrum Configurations',
-      type: 'panel',
       value: [{
         name: 'X',
         type: 'string',
