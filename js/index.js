@@ -52,23 +52,13 @@ const addTrack = (file) => {
   const div = document.createElement('div');
   div.classList.add('list-item');
   div.setAttribute('id', token);
-  const span1 = document.createElement('span');
-  span1.innerText = file.name;
-  div.appendChild(span1);
-  const span2 = document.createElement('span');
-  span2.classList.add('remove');
-  span2.innerHTML = 'x';
-  span2.addEventListener('click', (e) => {
-    removeTrack(token);
-  });
-  div.appendChild(span2);
-  const span3 = document.createElement('span');
-  span3.classList.add('play');
-  span3.innerHTML = '+';
-  span3.addEventListener('click', (e) => {
+  div.appendChild(spanButton(file.name, file.name, 'flex1'));
+  div.appendChild(spanButton('+', 'play', (e) => {
     playTrack(token);
-  });
-  div.appendChild(span3);
+  }));
+  div.appendChild(spanButton('x', 'remove', (e) => {
+    removeTrack(token);
+  }));
   $('.playlist').appendChild(div);
 }
 const removeTrack = (token) => {
@@ -106,6 +96,7 @@ window.addEventListener('keydown', (e) => {
   if (e.ctrlKey && e.code === 'KeyE') {
     e.preventDefault();
     dashboard.classList.toggle('hide');
+    document.body.classList.toggle('hide-cursor');
   }
 });
 $('#add-music-btn').addEventListener('click', (e) => {
@@ -131,15 +122,20 @@ document.addEventListener('drop', (e) => {
 $('#skip-play').addEventListener('click', () => playNext(playingToken));
 $('#stop-play').addEventListener('click', stop);
 $('#add-effect').addEventListener('click', (e) => {
-  viewer.addComp(eval(`new ${$('#effect-type').selectedOptions[0].value}()`));
+  const effectType = $('#effect-type').selectedOptions[0].value;
+  viewer.addComp(eval(`new ${effectType}()`));
+
 })
 
 const viewer = new Viewer(document.body);
 
+let __DEBUG_STOP_RENDER = false;
 const draw = (time) => {
+  if (__DEBUG_STOP_RENDER) return;
   analyser.getByteFrequencyData(frequency);
   const progress = (new Date() - startedTime) / 1000;
-  viewer.render({ frequency, trackInfo, duration, progress });
+  const high = frequency.reduce((a, b) => a + b, 0) / (frequency.length * 255);
+  viewer.render({ frequency, trackInfo, duration, progress, high });
   if (!stoped && progress > duration) {
     playNext(playingToken);
   }

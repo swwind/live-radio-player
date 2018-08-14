@@ -7,22 +7,27 @@
 </head>
 <body>
   <div class="dashboard">
-    <p>Press 'Ctrl + E' toggle bashboard</p>
-    <h3>Play List</h3>
-    <input type="file" multiple="multiple" id="add-music" accept="audio/*">
-    <input type="button" value="Add" id="add-music-btn">
-    <span>or simply drag & drop files on this page...</span>
-    <div class="playlist"></div>
-    <input type="button" value="skip" id="skip-play">
-    <input type="button" value="stop" id="stop-play">
-    <h3>Effects</h3>
-    <select id="effect-type">
-      <option value="Spectrum">Spectrum</option>
-      <option value="ImageComp">Image</option>
-      <option value="TextComp">Text</option>
-    </select>
-    <input type="button" value="Add" id="add-effect">
-    <div class="configs"></div>
+    <div class="flex1">
+      <h3>Play List</h3>
+      <input type="file" multiple="multiple" id="add-music" accept="audio/*">
+      <input type="button" value="Add" id="add-music-btn">
+      <p>or simply drag & drop files on this page...</p>
+      <div class="playlist"></div>
+      <input type="button" value="skip" id="skip-play">
+      <input type="button" value="stop" id="stop-play">
+      <p>Press 'Ctrl + E' toggle bashboard</p>
+    </div>
+    <div class="flex1">
+      <h3>Effects</h3>
+      <select id="effect-type">
+        <option value="Spectrum">Spectrum</option>
+        <option value="ImageComp">Image</option>
+        <option value="TextComp">Text</option>
+      </select>
+      <input type="button" value="Add" id="add-effect">
+      <div class="effectlist"></div>
+      <div class="configs"></div>
+    </div>
   </div>
   <script type="text/javascript" src="/js/util.js"></script>
   <script type="text/javascript" src="/js/md5.js"></script>

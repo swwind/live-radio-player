@@ -1,5 +1,17 @@
 .dashboard {
-  margin: 100px;
+  margin: 80px;
+  cursor: normal;
+  background: rgba(255, 255, 255, .5);
+  padding: 20px;
+  border: 2px solid #ccc;
+  display: flex;
+}
+.flex1 {
+  flex: 1;
+}
+.span-button {
+  cursor: pointer;
+  padding: 0 10px;
 }
 
 .playlist {
@@ -14,12 +26,11 @@
 
 .playlist .list-item {
   height: 25px;
-  padding: 0 10px;
   line-height: 25px;
   background-color: transparent;
   transition: background-color .2s;
-  position: relative;
   white-space: nowrap;
+  display: flex;
 }
 .playlist .list-item:hover {
   background-color: #0002;
@@ -29,40 +40,11 @@
   color: blue;
 }
 
-.playlist .list-item .remove {
-  display: inline-block;
-  height: 25px;
-  padding: 0 10px;
-  line-height: 25px;
-  position: absolute;
-  top: 0;
-  right: 0;
-  cursor: pointer;
-  transition: color .2s;
-}
-.playlist .list-item .remove:hover {
-  color: red;
-  transition: color .2s;
-}
-.playlist .list-item .play {
-  display: inline-block;
-  height: 25px;
-  padding: 0 10px;
-  line-height: 25px;
-  position: absolute;
-  top: 0;
-  right: 20px;
-  cursor: pointer;
-  transition: color .2s;
-}
-.playlist .list-item .play:hover {
-  color: green;
-  transition: color .2s;
-}
-
-
 .hide {
   display: none;
+}
+.hide-cursor {
+  cursor: none;
 }
 
 body, html {
@@ -81,6 +63,7 @@ body, html {
   z-index: -1;
 }
 .stage .comp {
+  display: block;
   position: absolute;
 }
 .stage .spectrum {
@@ -99,4 +82,7 @@ body, html {
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  transition: background-image 2s;
 }

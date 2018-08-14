@@ -36,6 +36,7 @@ class Viewer {
     const arr = JSON.parse(configs);
     arr.forEach((item) => {
       const map = new Map(item);
+      console.log(map);
       this.addComp(eval(`new ${map.get('name')}(map)`));
     });
   }

@@ -8,7 +8,7 @@ class Spectrum {
     this.bous = [];
     this.exampleBou = document.createElement('div');
     this.exampleBou.classList.add('spectrum-bou');
-    this.controller = new Controller('Spectrum', {
+    this.controller = new Controller({
       name: 'Spectrum Configurations',
       type: 'panel',
       value: [{
@@ -84,6 +84,7 @@ class Spectrum {
   }
   remove() {
     this.elem.remove();
+    this.controller.remove();
   }
   adjustSpectrumSize(now) {
     while (this.bous.length < now) this.addBou();
@@ -98,7 +99,9 @@ class Spectrum {
     this.bous.shift().remove();
   }
   getConfig() {
-    return this.controller.getConfig();
+    const config = this.controller.getConfig();
+    config.set('name', this.constructor.name);
+    return config;
   }
   render({ frequency }) {
     window.spectrumSize = this.bous.length;

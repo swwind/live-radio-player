@@ -5,7 +5,7 @@ class TextComp {
     this.elem = document.createElement('div');
     this.elem.classList.add('text');
     this.elem.classList.add('comp');
-    this.controller = new Controller('TextComp', {
+    this.controller = new Controller({
       name: 'Text Configurations',
       type: 'panel',
       value: [{
@@ -72,9 +72,12 @@ class TextComp {
   }
   remove() {
     this.elem.remove();
+    this.controller.remove();
   }
   getConfig() {
-    return this.controller.getConfig();
+    const config = this.controller.getConfig();
+    config.set('name', this.constructor.name);
+    return config;
   }
   render(cfg) {
     const text = this.text.replace(/%[^%]+%/g, (t) => {
