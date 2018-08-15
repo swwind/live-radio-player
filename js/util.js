@@ -41,7 +41,7 @@ const parseTrackInfo = (file) => {
           cover: cover,
           album: data.tags.album,
           title: data.tags.title,
-          author: data.tags.artist
+          artist: data.tags.artist
         });
       },
       onError: rej
@@ -77,5 +77,9 @@ const spanButton = (text, title, onclick, classes) => {
   if (Array.isArray(classes)) classes.forEach((cls) => span.classList.add(cls));
   else typeof classes === 'string' && span.classList.add(classes);
   return span;
+}
+
+const getClassByName = (name) => {
+  return (Function('return ' + name))();
 }
 

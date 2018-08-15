@@ -2,12 +2,14 @@
   margin: 80px;
   cursor: normal;
   background: rgba(255, 255, 255, .5);
-  padding: 20px;
   border: 2px solid #ccc;
   display: flex;
 }
 .flex1 {
   flex: 1;
+}
+.dashboard > div.flex1 {
+  margin: 20px;
 }
 .span-button {
   cursor: pointer;
@@ -18,10 +20,11 @@
   background: rgba(255, 255, 255, .7);
   box-shadow: inset 0 0 10px #666;
   height: 300px;
-  width: 500px;
+  width: 100%;
   overflow-y: auto;
   overflow-x: hidden;
   margin: 16px 0;
+  box-sizing: border-box;
 }
 
 .playlist .list-item {

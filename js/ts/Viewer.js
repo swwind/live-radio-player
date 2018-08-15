@@ -1,11 +1,11 @@
 'use strict';
 
 class Viewer {
-  constructor(fath) {
+  constructor() {
     this.comps = [];
     this.body = document.createElement('div');
     this.body.classList.add('stage');
-    fath.insertBefore(this.body, fath.firstChild);
+    document.body.insertBefore(this.body, document.body.firstChild);
   }
   addComp(comp) {
     this.comps.push(comp);
@@ -36,7 +36,7 @@ class Viewer {
     const arr = JSON.parse(configs);
     arr.forEach((item) => {
       const map = new Map(item);
-      this.addComp(new (Function('return ' + map.get('name'))())(map));
+      this.addComp(new (getClassByName(map.get('name')))(map));
     });
   }
 }

@@ -2,9 +2,6 @@
 
 class Controller {
   constructor(config, oldConfig) {
-    if (!config) {
-      throw 'java.lang.ArrayIndexOutOfBoundsException';
-    }
     this._events = [];
     this._config = new Map();
     this._oldConfig = oldConfig;
@@ -19,9 +16,6 @@ class Controller {
     return this._oldConfig.has(name) ? this._oldConfig.get(name) : defaultValue;
   }
   config2elem(config) {
-    if (!config) {
-      throw 'java.lang.NullPointerException';
-    }
     if (Array.isArray(config)) {
       const div = document.createElement('div');
       div.classList.add('c-div');
