@@ -1,0 +1,9 @@
+{
+  "name": "my-sister-can-not-be-so-cute",
+  "version": "v0.0.1",
+  "main": "app.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "http-server -c-1 -p 4000 -o"
+  }
+}

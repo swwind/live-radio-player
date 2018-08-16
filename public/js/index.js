@@ -58,6 +58,3 @@ if (localStorage.getItem('viewer cache')) {
 setInterval(() => {
   localStorage.setItem('viewer cache', viewer.exportConfig());
 }, 1000);
-
-
-
