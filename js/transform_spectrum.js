@@ -1,11 +1,6 @@
 // copy from https://github.com/caseif/vis.js/blob/gh-pages/js/analysis/spectrum_algorithms.js
 // New BSD License
 
-// mostly for debugging purposes
-function smooth(array) {
-  return savitskyGolaySmooth(array);
-}
-
 /**
  * Applies a Savitsky-Golay smoothing algorithm to the given array.
  *
@@ -38,6 +33,7 @@ function savitskyGolaySmooth(array) {
   return newArr;
 }
 
+/*
 function transformToVisualBins(array) {
   var newArray = new Uint8Array(spectrumSize);
   for (var i = 0; i < spectrumSize; i++) {
@@ -47,13 +43,14 @@ function transformToVisualBins(array) {
   }
   return newArray;
 }
+*/
 
 function getTransformedSpectrum(array) {
   var newArr = normalizeAmplitude(array);
-  newArr = averageTransform(newArr);
-  newArr = tailTransform(newArr);
-  newArr = smooth(newArr);
-  newArr = exponentialTransform(newArr);
+      newArr = averageTransform(newArr);
+      newArr = tailTransform(newArr);
+      newArr = savitskyGolaySmooth(newArr);
+      newArr = exponentialTransform(newArr);
   return newArr;
 }
 

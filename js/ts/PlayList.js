@@ -3,7 +3,7 @@
 class PlayList {
   constructor() {
     this.elem = document.createElement('div');
-    this.elem.classList.add('playlist');
+    this.elem.classList.add('play-list');
     this.files = new Map();
     this.elems = new Map();
     this.audioContext = new AudioContext();
@@ -17,17 +17,17 @@ class PlayList {
     this.startedTime = NaN;
     this.trackInfo = {};
     this.cssc = new CssController();
-    $('.play-list').appendChild(this.elem);
+    $('.tracks').appendChild(this.elem);
   }
   addTrack(file) {
     const token = md5(`${Math.random()}`).substr(0, 6);
     this.files.set(token, file);
-    const elem = this.createItemElement(token, file);
+    const elem = this._createItemElement(token, file);
     this.elems.set(token, elem);
     this.elem.appendChild(elem);
     return token;
   }
-  createItemElement(token, file) {
+  _createItemElement(token, file) {
     const div = document.createElement('div');
     div.classList.add('list-item');
     div.setAttribute('id', token);
@@ -35,22 +35,10 @@ class PlayList {
       this.playTrack(token);
     }, 'flex1'));
     div.appendChild(spanButton('^', 'move up', (e) => {
-      const node = e.target.parentElement;
-      if (node.previousElementSibling) {
-        const prev = node.previousElementSibling;
-        const pare = node.parentElement;
-        node.remove();
-        pare.insertBefore(node, prev);
-      }
+      moveUpElement(e.target.parentNode);
     }));
     div.appendChild(spanButton('v', 'move down', (e) => {
-      const node = e.target.parentElement;
-      if (node.nextElementSibling) {
-        const next = node.nextElementSibling;
-        const pare = node.parentElement;
-        node.remove();
-        pare.insertBefore(node, next.nextSibling);
-      }
+      moveDownElement(e.target.parentNode);
     }));
     div.appendChild(spanButton('x', 'remove', (e) => {
       this.removeTrack(token);
@@ -61,14 +49,14 @@ class PlayList {
     this._prepareTrack(token)
       .then(this._playTrack.bind(this), console.error);
   }
-  prepareAndPlayTrack(token) {
+  prepareToPlayTrack(token) {
     this._prepareTrack(token).then((data) => {
       setTimeout(() => {
         this._playTrack(data);
       }, (+ this.startedTime) + 1000 * this.duration - (new Date));
     }).catch((err) => {
       console.error(err);
-      this.prepareAndPlayTrack(this._getNextTrack(token));
+      this.prepareToPlayTrack(this._getNextTrack(token));
     });
   }
   _prepareTrack(token) {
@@ -96,7 +84,9 @@ class PlayList {
     });
   }
   _playTrack({ data, buffer, token }) {
-    this.cssc.set('--album-cover', 'url(' + data.cover + ')');
+    $('.playing') && $('.playing').classList.remove('playing');
+    $$(token).classList.add('playing');
+    this.cssc.set('--album-cover', 'url(' + (data.cover || '/img/default-cover.svg') + ')');
     this.trackInfo = data;
     this.source && this.source.stop();
     this.source = this.audioContext.createBufferSource();
@@ -126,7 +116,7 @@ class PlayList {
     const high = this.frequency.reduce((a, b) => a + b, 0) / (this.frequency.length * 255);
     if (this.duration - progress < 10 && this.source.token) {
       // less than 10s
-      this.prepareAndPlayTrack(this._getNextTrack(this.source.token));
+      this.prepareToPlayTrack(this._getNextTrack(this.source.token));
       this.source.token = null;
     }
     return {

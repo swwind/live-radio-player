@@ -11,7 +11,7 @@
   opacity: .7;
 }
 .sub-window.sw-focus {
-  box-shadow: 0 0 5px #66ccff;
+  box-shadow: 0 0 10px #aaa;
 }
 .sub-window .sw-statebar {
   display: flex;

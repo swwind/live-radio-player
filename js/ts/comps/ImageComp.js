@@ -1,10 +1,9 @@
 'use strict';
 
-class ImageComp {
+class ImageComp extends Component {
   constructor(config) {
-    this.elem = document.createElement('div');
+    super(config);
     this.elem.classList.add('image');
-    this.elem.classList.add('comp');
     this.animate = {
       width: 0,
       height: 0,
@@ -13,7 +12,7 @@ class ImageComp {
       scaleX: 2,
       scaleY: 2,
     };
-    this.controller = new Controller({
+    this.controller.init({
       name: 'Image Configurations',
       value: [{
         name: 'X',
@@ -84,29 +83,18 @@ class ImageComp {
       }, {
         name: 'Animation',
         type: 'string',
-        default: 'none',
+        default: 'shake auto-rotate',
         onChange: (value) => {
-          this.elem.style.transform = value;
+          this.animate.shake = /\bshake\b/i.test(value);
+          this.animate.autoRotate = /\bauto-rotate\b/i.test(value);
         }
       }]
-    }, config || new Map());
-  }
-  getElement() {
-    return this.elem;
-  }
-  remove() {
-    this.elem.remove();
-    this.controller.remove();
-  }
-  getConfig() {
-    const config = this.controller.getConfig();
-    config.set('name', this.constructor.name);
-    return config;
+    });
   }
   render({ high }) {
-    this.animate.scaleX = high * 0.5 + 1;
-    this.animate.scaleY = high * 0.5 + 1;
-    const deg = - new Date() / 3000;
+    this.animate.scaleX = this.animate.shake ? high * 0.5 + 1 : 1;
+    this.animate.scaleY = this.animate.shake ? high * 0.5 + 1 : 1;
+    const deg = this.animate.autoRotate ? - new Date() / 3000 : 0;
     const sindeg = Math.sin(deg);
     const cosdeg = Math.cos(deg);
     const matrix = [0, 0, 0, 0, 0, 0];
@@ -116,6 +104,6 @@ class ImageComp {
     matrix[3] =   cosdeg * this.animate.scaleY;
     matrix[4] = this.animate.translateX * this.animate.width;
     matrix[5] = this.animate.translateY * this.animate.height;
-    this.elem.style.transform = `matrix(${matrix.toString()})`;
+    this.elem.style.transform = `matrix(${matrix})`;
   }
 }

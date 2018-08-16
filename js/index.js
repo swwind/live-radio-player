@@ -8,7 +8,7 @@ const dashboard = $('.dashboard');
 const playList = new PlayList();
 
 window.addEventListener('keydown', (e) => {
-  if (e.ctrlKey && e.code === 'KeyE') {
+  if (e.ctrlKey && e.code === 'Enter') {
     e.preventDefault();
     dashboard.classList.toggle('hide');
     document.body.classList.toggle('hide-cursor');
@@ -37,7 +37,9 @@ document.addEventListener('drop', (e) => {
 });
 $('#add-effect').addEventListener('click', (e) => {
   const effectType = $('#effect-type').selectedOptions[0].value;
-  viewer.addComp(new (getClassByName(effectType)));
+  const comp = new (getClassByName(effectType));
+  viewer.addComp(comp);
+  comp.controller.elem.show();
 });
 
 const viewer = new Viewer();

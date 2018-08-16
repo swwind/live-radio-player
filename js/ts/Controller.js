@@ -1,19 +1,27 @@
 'use strict';
 
 class Controller {
-  constructor(config, oldConfig) {
+  constructor(oldConfig) {
+    this._oldConfig = oldConfig || new Map();
+  }
+  init(config) {
     this._events = [];
     this._config = new Map();
-    this._oldConfig = oldConfig;
     const configs = [{
       name: 'Alias',
       type: 'string',
-      default: 'My ' + config.name
+      default: 'My ' + config.name,
+      onChange: (value) => {
+        this.alias = value;
+      }
     }, ...config.value];
     this.elem = new SubWindow(config.name, this.config2elem(configs));
   }
-  getDefault(name, defaultValue) {
+  _getDefault(name, defaultValue) {
     return this._oldConfig.has(name) ? this._oldConfig.get(name) : defaultValue;
+  }
+  getAlias() {
+    return this._config.get('Alias');
   }
   config2elem(config) {
     if (Array.isArray(config)) {
@@ -31,7 +39,7 @@ class Controller {
       span.innerText = config.name + ': ';
       const input = document.createElement('input');
       input.setAttribute('type', 'color');
-      input.value = this.getDefault(config.name, config.default);
+      input.value = this._getDefault(config.name, config.default);
       input.addEventListener('input', (e) => {
         this._config.set(config.name, e.target.value);
         config.onChange && config.onChange(e.target.value);
@@ -49,7 +57,7 @@ class Controller {
       span.innerText = config.name + ': ';
       const input = document.createElement('input');
       input.setAttribute('type', 'string');
-      input.value = this.getDefault(config.name, config.default);
+      input.value = this._getDefault(config.name, config.default);
       input.addEventListener('input', (e) => {
         this._config.set(config.name, e.target.value);
         config.onChange && config.onChange(e.target.value);
@@ -66,7 +74,7 @@ class Controller {
       const span = document.createElement('span');
       span.innerText = config.name + ': ';
       const textarea = document.createElement('textarea');
-      textarea.value = this.getDefault(config.name, config.default);
+      textarea.value = this._getDefault(config.name, config.default);
       textarea.addEventListener('input', (e) => {
         this._config.set(config.name, e.target.value);
         config.onChange && config.onChange(e.target.value);
@@ -85,7 +93,7 @@ class Controller {
       const input = document.createElement('input');
       input.setAttribute('type', 'number');
       input.setAttribute('step', 'any');
-      input.value = this.getDefault(config.name, config.default);
+      input.value = this._getDefault(config.name, config.default);
       input.addEventListener('input', (e) => {
         this._config.set(config.name, e.target.value);
         config.onChange && config.onChange(e.target.value);
@@ -108,7 +116,7 @@ class Controller {
         this._config.set(config.name, e.target.selectedIndex);
         config.onChange && config.onChange(config.options[e.target.selectedIndex]);
       });
-      select.selectedIndex = this.getDefault(config.name, config.default);
+      select.selectedIndex = this._getDefault(config.name, config.default);
       this._config.set(config.name, select.selectedIndex);
       config.onChange && config.onChange(config.options[select.selectedIndex]);
       div.appendChild(select);
@@ -123,6 +131,9 @@ class Controller {
   }
   remove() {
     return this.elem.remove();
+  }
+  showElem() {
+    return this.elem.show();
   }
 }
 

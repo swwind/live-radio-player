@@ -15,7 +15,7 @@ class SubWindow {
     this.setWidth(width || 400);
     this.setHeight(height || 500);
     this.setPosition(px || 200, py || 200);
-    this.focus();
+    this.hide();
   }
   _createStateBar(title) {
     const stateBar = document.createElement('div');
@@ -46,9 +46,7 @@ class SubWindow {
     const close = document.createElement('span');
     close.classList.add('sw-close');
     close.innerText = 'X';
-    close.addEventListener('click', (e) => {
-      this.elem.style.display = 'none';
-    });
+    close.addEventListener('click', this.hide.bind(this));
     stateBar.appendChild(close);
     return stateBar;
   }
@@ -70,6 +68,10 @@ class SubWindow {
   }
   show() {
     this.elem.style.display = 'block';
+    this.focus();
+  }
+  hide() {
+    this.elem.style.display = 'none';
   }
   getElement() {
     return this.elem;

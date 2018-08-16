@@ -1,6 +1,5 @@
 .dashboard {
   margin: 80px;
-  cursor: normal;
   background: rgba(255, 255, 255, .5);
   border: 2px solid #ccc;
   display: flex;
@@ -16,7 +15,7 @@
   padding: 0 10px;
 }
 
-.playlist {
+.play-list, .effect-list {
   background: rgba(255, 255, 255, .7);
   box-shadow: inset 0 0 10px #666;
   height: 300px;
@@ -27,7 +26,7 @@
   box-sizing: border-box;
 }
 
-.playlist .list-item {
+.list-item {
   height: 25px;
   line-height: 25px;
   background-color: transparent;
@@ -35,12 +34,19 @@
   white-space: nowrap;
   display: flex;
 }
-.playlist .list-item:hover {
+.list-item:hover {
   background-color: #0002;
   transition: background-color .2s;
 }
-.playlist .list-item.playing {
+.list-item span {
+  padding: 0 10px;
+}
+.play-list .list-item.playing {
   color: blue;
+}
+.effect-type {
+  width: 100px;
+  box-sizing: border-box;
 }
 
 .hide {
@@ -55,6 +61,7 @@ body, html {
   margin: 0;
   min-height: 100vh;
   width: 100vw;
+  overflow: hidden;
 }
 
 .stage {

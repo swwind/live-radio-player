@@ -1,11 +1,10 @@
 'use strict';
 
-class TextComp {
+class TextComp extends Component {
   constructor(config) {
-    this.elem = document.createElement('div');
+    super(config);
     this.elem.classList.add('text');
-    this.elem.classList.add('comp');
-    this.controller = new Controller({
+    this.controller.init({
       name: 'Text Configurations',
       value: [{
         name: 'X',
@@ -64,19 +63,7 @@ class TextComp {
           this.elem.style.fontFamily = value;
         }
       }]
-    }, config || new Map());
-  }
-  getElement() {
-    return this.elem;
-  }
-  remove() {
-    this.elem.remove();
-    this.controller.remove();
-  }
-  getConfig() {
-    const config = this.controller.getConfig();
-    config.set('name', this.constructor.name);
-    return config;
+    });
   }
   render(cfg) {
     const text = this.text.replace(/%[^%]+%/g, (t) => {

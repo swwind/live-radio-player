@@ -1,14 +1,13 @@
 'use strict';
 
-class Spectrum {
+class Spectrum extends Component {
   constructor(config) {
-    this.elem = document.createElement('div');
+    super(config);
     this.elem.classList.add('spectrum');
-    this.elem.classList.add('comp');
     this.bous = [];
     this.exampleBou = document.createElement('div');
     this.exampleBou.classList.add('spectrum-bou');
-    this.controller = new Controller({
+    this.controller.init({
       name: 'Spectrum Configurations',
       value: [{
         name: 'X',
@@ -76,14 +75,7 @@ class Spectrum {
           this.elem.style.alignItems = value;
         }
       }]
-    }, config || new Map());
-  }
-  getElement() {
-    return this.elem;
-  }
-  remove() {
-    this.elem.remove();
-    this.controller.remove();
+    });
   }
   adjustSpectrumSize(now) {
     while (this.bous.length < now) this.addBou();
@@ -96,11 +88,6 @@ class Spectrum {
   }
   removeBou() {
     this.bous.shift().remove();
-  }
-  getConfig() {
-    const config = this.controller.getConfig();
-    config.set('name', this.constructor.name);
-    return config;
   }
   render({ frequency }) {
     window.spectrumSize = this.bous.length;
