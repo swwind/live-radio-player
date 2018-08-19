@@ -1,11 +1,11 @@
 'use strict';
 
+const axios = require('axios');
+
 class PlayList {
   constructor() {
-    this.elem = document.createElement('div');
-    this.elem.classList.add('play-list');
+    this.elem = $('.play-list');
     this.files = new Map();
-    this.elems = new Map();
     this.audioContext = new AudioContext();
     this.analyser = this.audioContext.createAnalyser();
     this.analyser.fftSize = maxFftSize;
@@ -17,21 +17,31 @@ class PlayList {
     this.startedTime = NaN;
     this.trackInfo = {};
     this.cssc = new CssController();
-    $('.tracks').appendChild(this.elem);
   }
-  addTrack(file) {
+
+  addTrackFromFile(file) {
     const token = md5(`${Math.random()}`).substr(0, 6);
-    this.files.set(token, file);
-    const elem = this._createItemElement(token, file);
-    this.elems.set(token, elem);
+    const item = { type: 'file', file };
+    this.files.set(token, item);
+    const elem = this._createItemElement(token, file.name);
     this.elem.appendChild(elem);
     return token;
   }
-  _createItemElement(token, file) {
+
+  addTrackFromUrl(url, name, id) {
+    const token = md5(`${Math.random()}`).substr(0, 6);
+    const item = { type: 'url', url, name, id };
+    this.files.set(token, item);
+    const elem = this._createItemElement(token, name);
+    this.elem.appendChild(elem);
+    return token;
+  }
+
+  _createItemElement(token, name) {
     const div = document.createElement('div');
     div.classList.add('list-item');
     div.setAttribute('id', token);
-    div.appendChild(spanButton(file.name, file.name, (e) => {
+    div.appendChild(spanButton(name, name, (e) => {
       this.playTrack(token);
     }, 'flex1'));
     div.appendChild(spanButton('^', 'move up', (e) => {
@@ -45,44 +55,83 @@ class PlayList {
     }));
     return div;
   }
+
   playTrack(token) {
+    this.nextPlay && clearTimeout(this.nextPlay);
     this._prepareTrack(token)
       .then(this._playTrack.bind(this), console.error);
   }
+
   prepareToPlayTrack(token) {
     this._prepareTrack(token).then((data) => {
-      setTimeout(() => {
+      this.nextPlay = setTimeout(() => {
         this._playTrack(data);
       }, (+ this.startedTime) + 1000 * this.duration - (new Date));
     }).catch((err) => {
       console.error(err);
-      this.prepareToPlayTrack(this._getNextTrack(token));
+      this.prepareToPlayTrack(this._getNextTrackToken(token));
     });
   }
-  _prepareTrack(token) {
+
+  _decodeAudioData(data) {
     return new Promise((resolve, reject) => {
-      const file = this.files.get(token);
-      if (!file) reject('Could not find file with token: ' + token);
-      let data = null, buffer = null;
-      parseTrackInfo(file).then((_data) => {
-        data = _data;
-        data.title = data.title || decodeURIComponent(file.name.replace(/\.[^\.]+$/i, ''));
-        if (buffer) resolve({ data, buffer, token });
-      }).catch((err) => {
-        data = { title: decodeURIComponent(file.name.replace(/\.[^\.]+$/i, '')) };
-        if (buffer) resolve({ data, buffer, token });
-      });
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        this.audioContext.decodeAudioData(e.target.result, (_buffer) => {
-          buffer = _buffer;
-          if (data) resolve({ data, buffer, token });
-        }, reject);
-      };
-      reader.onerror = reject;
-      reader.readAsArrayBuffer(file);
+      this.audioContext.decodeAudioData(data, resolve, reject);
     });
   }
+
+  _prepareTrack(token) {
+    const track = this.files.get(token);
+
+    if (!token) {
+      return new Promise((resolve, reject) => reject('Token not found'));
+    }
+
+    // load from file
+    if (track.type === 'file') {
+      return new Promise((resolve, reject) => {
+        let data = null, buffer = null;
+        const defaultName = decodeURIComponent(track.file.name.replace(/\.[^\.]+$/i, ''));
+        parseTrackInfo(track.file).then((_data) => {
+          data = _data;
+          data.title = data.title || defaultName;
+          if (buffer) resolve({ data, buffer, token });
+        }).catch((err) => {
+          data = { title: defaultName };
+          if (buffer) resolve({ data, buffer, token });
+        });
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this._decodeAudioData(e.target.result).then((_buffer) => {
+            buffer = _buffer;
+            if (data) resolve({ data, buffer, token });
+          }, reject);
+        };
+        reader.onerror = reject;
+        reader.readAsArrayBuffer(track.file);
+      });
+    }
+
+    // load from url
+    if (track.type === 'url') {
+      return new Promise((resolve, reject) => {
+        let data = null, buffer = null;
+        const defaultName = decodeURIComponent(track.name.replace(/\.[^\.]+$/i, ''));
+        parseTrackInfoFromNetEaseCloudMusic(track.id, defaultName).then((_data) => {
+          data = _data;
+          if (buffer) resolve({ data, buffer, token });
+        }, reject);
+        axios.get(track.url, { responseType: 'arraybuffer' }).then((e) => {
+          this._decodeAudioData(e.data).then((_buffer) => {
+            buffer = _buffer;
+            if (data) resolve({ data, buffer, token });
+          }, reject);
+        }, reject);
+      });
+    }
+
+    throw 'Unknow track type';
+  }
+
   _playTrack({ data, buffer, token }) {
     $('.playing') && $('.playing').classList.remove('playing');
     $$(token).classList.add('playing');
@@ -97,7 +146,8 @@ class PlayList {
     this.duration = buffer.duration;
     this.startedTime = new Date();
   }
-  _getNextTrack(token) {
+
+  _getNextTrackToken(token) {
     const elem = $$(token);
     if (!elem || !elem.nextElementSibling) {
       return this.elem.firstChild.getAttribute('id');
@@ -105,18 +155,19 @@ class PlayList {
       return elem.nextElementSibling.getAttribute('id');
     }
   }
+
   removeTrack(token) {
     this.files.delete(token);
-    this.elems.get(token).remove();
-    this.elems.delete(token);
+    $$(token) && $$(token).remove();
   }
+
   getInfo() {
     this.analyser.getByteFrequencyData(this.frequency);
     const progress = (new Date() - this.startedTime) / 1000;
     const high = this.frequency.reduce((a, b) => a + b, 0) / (this.frequency.length * 255);
     if (this.duration - progress < 10 && this.source.token) {
       // less than 10s
-      this.prepareToPlayTrack(this._getNextTrack(this.source.token));
+      this.prepareToPlayTrack(this._getNextTrackToken(this.source.token));
       this.source.token = null;
     }
     return {
@@ -125,5 +176,23 @@ class PlayList {
       duration: this.duration,
       progress, high
     };
+  }
+
+  loadNetEaseCloudMusicPlayList(id) {
+    backend.netease.playlist(id).then((res) => {
+      const idmap = new Map();
+      backend.netease.musicurl(res.playlist.tracks.map((track) => {
+        idmap.set(track.id, track.name);
+        return track.id;
+      })).then((msg) => {
+        msg.data.forEach(({ url, id }, i) => {
+          this.addTrackFromUrl(url, idmap.get(id), id);
+        });
+      }, (err) => {
+        alert('Error loading music\n' + err);
+      });
+    }, (err) => {
+      alert('Error loading playlist\nPlease try again or send issue to us.');
+    })
   }
 }

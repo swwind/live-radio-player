@@ -1,5 +1,9 @@
 'use strict';
 
+const backend = require('./js/backend');
+const jsmediatags = require('jsmediatags');
+const md5 = require('blueimp-md5');
+
 const resolveTime = (m) => {
   if (m === undefined || isNaN(m)) return '--:--';
   const rm = Math.round(m);
@@ -33,18 +37,34 @@ const encodeCover = (pic) => {
 }
 
 const parseTrackInfo = (file) => {
-  return new Promise((res, rej) => {
+  return new Promise((resolve, reject) => {
     jsmediatags.read(file, {
       onSuccess: (data) => {
         const cover = encodeCover(data.tags.picture);
-        res({
+        resolve({
           cover: cover,
           album: data.tags.album,
           title: data.tags.title,
           artist: data.tags.artist
         });
       },
-      onError: rej
+      onError: reject
+    });
+  });
+}
+
+const parseTrackInfoFromNetEaseCloudMusic = (id, title) => {
+  return new Promise((resolve, reject) => {
+    backend.netease.musicinfo(id).then((res) => {
+      const info = res.songs[0];
+      resolve({
+        cover: info.al.picUrl,
+        album: info.al.name,
+        title: info.name,
+        artist: info.ar.map((art) => art.name).join('/')
+      });
+    }, (err) => {
+      resolve({ title });
     });
   });
 }
@@ -55,10 +75,12 @@ class CssController {
     this.props = new Map();
     document.head.appendChild(this.elem);
   }
+
   set(key, value) {
     this.props.set(key, value);
     this.render();
   }
+
   render() {
     this.elem.innerHTML = ':root{' + Array.from(this.props).map(([key, value]) => `${key}:${value}`).join(';') + '}';
   }
@@ -91,6 +113,7 @@ const moveUpElement = (node) => {
     pare.insertBefore(node, prev);
   }
 }
+
 const moveDownElement = (node) => {
   if (node.nextElementSibling) {
     const next = node.nextElementSibling;
@@ -118,4 +141,8 @@ const moveDownInArray = (arr, elem) => {
     arr[index + 1] = tmp;
   }
   return arr;
+}
+
+const randomLinearFunction = (now, ...args) => {
+  return [...args].map((w) => Math.sin(now / w)).reduce((a, b) => a * b);
 }

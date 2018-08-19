@@ -23,7 +23,7 @@ class TextComp extends Component {
       }, {
         name: 'Value',
         type: 'multistring',
-        default: '%trackName% (%progress% / %duration%)',
+        default: '%title% (%progress% / %duration%)\nArtist: %artist%\nAlbum: %album%',
         onChange: (value) => {
           this.text = value;
         }
@@ -65,6 +65,7 @@ class TextComp extends Component {
       }]
     });
   }
+
   render(cfg) {
     const text = this.text.replace(/%[^%]+%/g, (t) => {
       const name = t.slice(1, t.length - 1);

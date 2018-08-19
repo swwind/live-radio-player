@@ -77,18 +77,22 @@ class Spectrum extends Component {
       }]
     });
   }
+
   adjustSpectrumSize(now) {
     while (this.bous.length < now) this.addBou();
     while (this.bous.length > now) this.removeBou();
   }
+
   addBou() {
     const bou = this.exampleBou.cloneNode();
     this.elem.appendChild(bou);
     this.bous.push(bou);
   }
+
   removeBou() {
     this.bous.shift().remove();
   }
+
   render({ frequency }) {
     window.spectrumSize = this.bous.length;
     window.spectrumHeight = this.spectrumHeight;

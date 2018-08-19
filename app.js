@@ -37,7 +37,9 @@ function createWindow () {
     mainWindow = null;
   });
 
-  Menu.setApplicationMenu(null)
+  // mainWindow.webContents.openDevTools(); // Shift + Ctrl + I not work
+
+  Menu.setApplicationMenu(null);
 }
 
 // This method will be called when Electron has finished

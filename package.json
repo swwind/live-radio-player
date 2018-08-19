@@ -3,7 +3,13 @@
   "version": "v0.0.1",
   "main": "app.js",
   "scripts": {
-    "start": "electron .",
-    "dev": "http-server -c-1 -p 4000 -o"
+    "start": "electron ."
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "big-integer": "^1.6.34",
+    "blueimp-md5": "^2.10.0",
+    "jsmediatags": "^3.8.1",
+    "request": "^2.88.0"
   }
 }

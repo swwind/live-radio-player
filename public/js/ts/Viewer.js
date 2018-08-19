@@ -6,16 +6,16 @@ class Viewer {
     this.body = document.createElement('div');
     this.body.classList.add('stage');
     document.body.insertBefore(this.body, document.body.firstChild);
-    this.elem = document.createElement('div');
-    this.elem.classList.add('effect-list');
-    $('.effects').appendChild(this.elem);
+    this.elem = $('.effect-list');
   }
+
   addComp(comp) {
     this.comps.push(comp);
     this.body.appendChild(comp.getElement());
     $('.configs').appendChild(comp.controller.getElement());
     this.elem.insertBefore(this._createItemElement(comp), this.elem.firstChild);
   }
+
   _createItemElement(comp) {
     const div = document.createElement('div');
     div.classList.add('list-item');
@@ -52,6 +52,7 @@ class Viewer {
     }));
     return div;
   }
+
   removeComp(comp) {
     this.comps = this.comps.filter(c => {
       if (c === comp) {
@@ -61,6 +62,7 @@ class Viewer {
       return true;
     });
   }
+
   render(state) {
     state.frequency = state.frequency;
     state.duration = resolveTime(state.duration);
@@ -69,9 +71,11 @@ class Viewer {
       comp.render(state);
     });
   }
+
   exportConfig() {
     return JSON.stringify(this.comps.map((comp, i) => Array.from(comp.getConfig(i))));
   }
+
   importConfig(configs) {
     const arr = JSON.parse(configs);
     arr.map(x => new Map(x)).sort((m1, m2) => {

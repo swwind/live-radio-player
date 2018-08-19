@@ -16,7 +16,7 @@ window.addEventListener('keydown', (e) => {
 });
 $('#add-music-btn').addEventListener('click', (e) => {
   Array.from($('#add-music').files)
-    .forEach(playList.addTrack.bind(playList));
+    .forEach(playList.addTrackFromFile.bind(playList));
 });
 document.addEventListener('dragover', (e) => {
   e.preventDefault();
@@ -26,12 +26,12 @@ document.addEventListener('drop', (e) => {
   if (e.dataTransfer.items) {
     for (var i = 0; i < e.dataTransfer.items.length; i++) {
       if (e.dataTransfer.items[i].kind === 'file') {
-        playList.addTrack(e.dataTransfer.items[i].getAsFile());
+        playList.addTrackFromFile(e.dataTransfer.items[i].getAsFile());
       }
     }
   } else {
     for (var i = 0; i < e.dataTransfer.files.length; i++) {
-      playList.addTrack(e.dataTransfer.files[i]);
+      playList.addTrackFromFile(e.dataTransfer.files[i]);
     }
   } 
 });
@@ -41,6 +41,10 @@ $('#add-effect').addEventListener('click', (e) => {
   viewer.addComp(comp);
   comp.controller.elem.show();
 });
+$$('netease-playlist-btn').addEventListener('click', (e) => {
+  const number = $$('netease-playlist').value;
+  playList.loadNetEaseCloudMusicPlayList(number);
+})
 
 const viewer = new Viewer();
 

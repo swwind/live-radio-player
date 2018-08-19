@@ -17,6 +17,7 @@ class SubWindow {
     this.setPosition(px || 200, py || 200);
     this.hide();
   }
+
   _createStateBar(title) {
     const stateBar = document.createElement('div');
           stateBar.classList.add('sw-statebar')
@@ -50,40 +51,49 @@ class SubWindow {
     stateBar.appendChild(close);
     return stateBar;
   }
+
   setWidth(width) {
     if (typeof width === 'number') {
       width = width + 'px';
     }
     this.elem.style.width = width;
   }
+
   setHeight(height) {
     if (typeof height === 'number') {
       height = height + 'px';
     }
     this.elem.style.height = height;
   }
+
   setPosition(x, y) {
     this.elem.style.left = x + 'px';
     this.elem.style.top  = y + 'px';
   }
+
   show() {
     this.elem.style.display = 'block';
     this.focus();
   }
+
   hide() {
     this.elem.style.display = 'none';
   }
+
   getElement() {
     return this.elem;
   }
+
   focus() {
     $('.sw-focus') && $('.sw-focus').classList.remove('sw-focus');
     this.elem.classList.add('sw-focus');
     this.elem.style.zIndex = ++ maxZindex;
   }
+
   pinToTop() {
     this.elem.style.zIndex = 1000000;
   }
+
   remove() {
     this.elem.remove();
   }

@@ -4,6 +4,7 @@ class Controller {
   constructor(oldConfig) {
     this._oldConfig = oldConfig || new Map();
   }
+
   init(config) {
     this._events = [];
     this._config = new Map();
@@ -17,13 +18,18 @@ class Controller {
     }, ...config.value];
     this.elem = new SubWindow(config.name, this.config2elem(configs));
   }
+
   _getDefault(name, defaultValue) {
     return this._oldConfig.has(name) ? this._oldConfig.get(name) : defaultValue;
   }
+
   getAlias() {
     return this._config.get('Alias');
   }
+
   config2elem(config) {
+
+    /* array */
     if (Array.isArray(config)) {
       const div = document.createElement('div');
       div.classList.add('c-div');
@@ -32,6 +38,9 @@ class Controller {
       });
       return div;
     }
+
+
+    /* color */
     if (config.type === 'color') {
       const div = document.createElement('div');
       div.classList.add('c-color');
@@ -50,6 +59,8 @@ class Controller {
       div.appendChild(input);
       return div;
     }
+
+    /* string */
     if (config.type === 'string') {
       const div = document.createElement('div');
       div.classList.add('c-string');
@@ -68,6 +79,8 @@ class Controller {
       div.appendChild(input);
       return div;
     }
+
+    /* multistring(textarea) */
     if (config.type === 'multistring') {
       const div = document.createElement('div');
       div.classList.add('c-multistring');
@@ -85,6 +98,8 @@ class Controller {
       div.appendChild(textarea);
       return div;
     }
+
+    /* number */
     if (config.type === 'number') {
       const div = document.createElement('div');
       div.classList.add('c-number');
@@ -104,6 +119,8 @@ class Controller {
       div.appendChild(input);
       return div;
     }
+
+    /* select */
     if (config.type === 'select') {
       const div = document.createElement('div');
       div.classList.add('c-select');
@@ -123,15 +140,19 @@ class Controller {
       return div;
     }
   }
+
   getElement() {
     return this.elem.getElement();
   }
+
   getConfig() {
     return this._config;
   }
+
   remove() {
     return this.elem.remove();
   }
+
   showElem() {
     return this.elem.show();
   }
