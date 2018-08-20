@@ -1,5 +1,10 @@
 // copy from https://github.com/caseif/vis.js/blob/gh-pages/js/util/config.js
 // New BSD License
+// I don't know how these configurations work.
+// But that is ok, I have no necessary to understand them.
+// We only need its spectrum smooth algorithms.
+
+// ------------------
 
 // NOTE: Not all config values may necessarily be changed by the user at
 // runtime. Some are mutated internally after intialization, meaning changing
