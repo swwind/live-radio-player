@@ -95,10 +95,9 @@ class Spectrum extends Component {
 
   render({ frequency }) {
     window.spectrumSize = this.bous.length;
-    window.spectrumHeight = this.spectrumHeight;
     const spectrum = getTransformedSpectrum(frequency);
     this.bous.forEach((bou, i) => {
-      bou.style.height = spectrum[i] + 'px';
+      bou.style.height = spectrum[i] + '%';
     });
   }
 }

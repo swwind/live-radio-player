@@ -1,6 +1,6 @@
 'use strict';
 
-const axios = require('axios');
+const fs = require('fs');
 
 class PlayList {
   constructor() {
@@ -20,8 +20,8 @@ class PlayList {
   }
 
   addTrackFromFile(file) {
-    const token = md5(`${Math.random()}`).substr(0, 6);
-    const item = { type: 'file', file };
+    const token = randomToken(6);
+    const item = { type: 'file', file: file.path };
     this.files.set(token, item);
     const elem = this._createItemElement(token, file.name);
     this.elem.appendChild(elem);
@@ -29,7 +29,7 @@ class PlayList {
   }
 
   addTrackFromUrl(url, name, id) {
-    const token = md5(`${Math.random()}`).substr(0, 6);
+    const token = randomToken(6);
     const item = { type: 'url', url, name, id };
     this.files.set(token, item);
     const elem = this._createItemElement(token, name);
@@ -88,9 +88,13 @@ class PlayList {
 
     // load from file
     if (track.type === 'file') {
+
       return new Promise((resolve, reject) => {
+
         let data = null, buffer = null;
-        const defaultName = decodeURIComponent(track.file.name.replace(/\.[^\.]+$/i, ''));
+        const filename = last(track.file.split('/'));
+        const defaultName = filename.replace(/\.[^\.]+$/i, '');
+
         parseTrackInfo(track.file).then((_data) => {
           data = _data;
           data.title = data.title || defaultName;
@@ -99,34 +103,40 @@ class PlayList {
           data = { title: defaultName };
           if (buffer) resolve({ data, buffer, token });
         });
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          this._decodeAudioData(e.target.result).then((_buffer) => {
+
+        fs.readFile(track.file, (err, buf) => {
+          this._decodeAudioData(buf.buffer).then((_buffer) => {
             buffer = _buffer;
             if (data) resolve({ data, buffer, token });
           }, reject);
-        };
-        reader.onerror = reject;
-        reader.readAsArrayBuffer(track.file);
+        });
+
       });
+
     }
 
     // load from url
     if (track.type === 'url') {
+
       return new Promise((resolve, reject) => {
+
         let data = null, buffer = null;
         const defaultName = decodeURIComponent(track.name.replace(/\.[^\.]+$/i, ''));
+
         parseTrackInfoFromNetEaseCloudMusic(track.id, defaultName).then((_data) => {
           data = _data;
           if (buffer) resolve({ data, buffer, token });
         }, reject);
-        axios.get(track.url, { responseType: 'arraybuffer' }).then((e) => {
-          this._decodeAudioData(e.data).then((_buffer) => {
+
+        backend.netease.postFile(track.url).then((e) => {
+          this._decodeAudioData(e.buffer).then((_buffer) => {
             buffer = _buffer;
             if (data) resolve({ data, buffer, token });
           }, reject);
         }, reject);
+
       });
+
     }
 
     throw 'Unknow track type';

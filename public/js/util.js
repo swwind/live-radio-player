@@ -2,7 +2,6 @@
 
 const backend = require('./js/backend');
 const jsmediatags = require('jsmediatags');
-const md5 = require('blueimp-md5');
 
 const resolveTime = (m) => {
   if (m === undefined || isNaN(m)) return '--:--';
@@ -145,4 +144,17 @@ const moveDownInArray = (arr, elem) => {
 
 const randomLinearFunction = (now, ...args) => {
   return [...args].map((w) => Math.sin(now / w)).reduce((a, b) => a * b);
+}
+
+const last = (array) => {
+  return array[array.length - 1];
+}
+
+const randomToken = (len) => {
+  const str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789";
+  let res = '';
+  while (len --) {
+    res += str.charAt(rand(str.length));
+  }
+  return res;
 }

@@ -69,7 +69,7 @@ class ImageComp extends Component {
         }
       }, {
         name: 'Animation',
-        type: 'string',
+        type: 'multistring',
         default: 'shake auto-rotate',
         onChange: (value) => {
           this.animate.shake = /\bshake\b/i.test(value);
