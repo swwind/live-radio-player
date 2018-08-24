@@ -14,13 +14,17 @@ window.addEventListener('keydown', (e) => {
     document.body.classList.toggle('hide-cursor');
   }
 });
+
 $('#add-music-btn').addEventListener('click', (e) => {
   Array.from($('#add-music').files)
     .forEach(playList.addTrackFromFile.bind(playList));
 });
+
 document.addEventListener('dragover', (e) => {
   e.preventDefault();
 });
+
+// BUG: drop text will ...
 document.addEventListener('drop', (e) => {
   e.preventDefault();
   if (e.dataTransfer.items) {
@@ -33,8 +37,9 @@ document.addEventListener('drop', (e) => {
     for (var i = 0; i < e.dataTransfer.files.length; i++) {
       playList.addTrackFromFile(e.dataTransfer.files[i]);
     }
-  } 
+  }
 });
+
 $('#add-effect').addEventListener('click', (e) => {
   const effectType = $('#effect-type').selectedOptions[0].value;
   const comp = new (getClassByName(effectType));
@@ -54,11 +59,16 @@ const draw = (time) => {
 }
 draw();
 
+// viewer cache
 if (localStorage.getItem('viewer cache')) {
   viewer.importConfig(localStorage.getItem('viewer cache'));
 }
+if (localStorage.getItem('player cache')) {
+  playList.importList(localStorage.getItem('player cache'));
+}
 
-// save changes to local
+// save configurations to local
 setInterval(() => {
   localStorage.setItem('viewer cache', viewer.exportConfig());
+  localStorage.setItem('player cache', playList.exportList());
 }, 1000);

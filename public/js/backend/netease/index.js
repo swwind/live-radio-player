@@ -32,8 +32,6 @@ const randomUA = () => {
   return userAgentList[rand(userAgentList.length)];
 }
 
-const axios = require('axios');
-
 const sendRequest = (url, data) => {
   const cryptoreq = Encrypt(data);
   const options = {

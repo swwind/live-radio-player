@@ -21,7 +21,7 @@ class PlayList {
 
   addTrackFromFile(file) {
     const token = randomToken(6);
-    const item = { type: 'file', file: file.path };
+    const item = { type: 'file', path: file.path, name: file.name };
     this.files.set(token, item);
     const elem = this._createItemElement(token, file.name);
     this.elem.appendChild(elem);
@@ -35,6 +35,22 @@ class PlayList {
     const elem = this._createItemElement(token, name);
     this.elem.appendChild(elem);
     return token;
+  }
+
+  importList(str) {
+    const list = JSON.parse(str);
+    list.forEach((item) => {
+      if (item.type === 'file') {
+        this.addTrackFromFile(item);
+      }
+      if (item.type === 'url') {
+        this.addTrackFromUrl(item.url, item.name, item.id);
+      }
+    });
+  }
+
+  exportList() {
+    return JSON.stringify(Array.from(this.files.values()));
   }
 
   _createItemElement(token, name) {
@@ -92,10 +108,10 @@ class PlayList {
       return new Promise((resolve, reject) => {
 
         let data = null, buffer = null;
-        const filename = last(track.file.split('/'));
+        const filename = last(track.path.split('/'));
         const defaultName = filename.replace(/\.[^\.]+$/i, '');
 
-        parseTrackInfo(track.file).then((_data) => {
+        parseTrackInfo(track.path).then((_data) => {
           data = _data;
           data.title = data.title || defaultName;
           if (buffer) resolve({ data, buffer, token });
@@ -104,7 +120,7 @@ class PlayList {
           if (buffer) resolve({ data, buffer, token });
         });
 
-        fs.readFile(track.file, (err, buf) => {
+        fs.readFile(track.path, (err, buf) => {
           this._decodeAudioData(buf.buffer).then((_buffer) => {
             buffer = _buffer;
             if (data) resolve({ data, buffer, token });
