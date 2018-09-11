@@ -187,12 +187,16 @@ class PlayList {
     $$(token) && $$(token).remove();
   }
 
+  removeAll() {
+    Array.from(this.files.keys()).forEach(this.removeTrack.bind(this));
+  }
+
   getInfo() {
     this.analyser.getByteFrequencyData(this.frequency);
     const progress = (new Date() - this.startedTime) / 1000;
     const high = this.frequency.reduce((a, b) => a + b, 0) / (this.frequency.length * 255);
-    if (this.duration - progress < 10 && this.source.token) {
-      // less than 10s
+    if (this.duration - progress > 0 && this.source.token) {
+      // prepare next
       this.prepareToPlayTrack(this._getNextTrackToken(this.source.token));
       this.source.token = null;
     }

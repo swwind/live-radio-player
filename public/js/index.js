@@ -49,7 +49,10 @@ $('#add-effect').addEventListener('click', (e) => {
 $$('netease-playlist-btn').addEventListener('click', (e) => {
   const number = $$('netease-playlist').value;
   playList.loadNetEaseCloudMusicPlayList(number);
-})
+});
+$$('remove-all').addEventListener('click', (e) => {
+  playList.removeAll();
+});
 
 const viewer = new Viewer();
 
