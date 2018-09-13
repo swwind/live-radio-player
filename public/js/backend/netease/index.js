@@ -73,6 +73,7 @@ const playlist = (id) => {
   return sendRequest('http://music.163.com/weapi/v3/playlist/detail', data);
 }
 
+/*
 const musicurl = (id) => {
   if (!Array.isArray(id)) {
     id = [id];
@@ -84,6 +85,7 @@ const musicurl = (id) => {
   };
   return sendRequest('http://music.163.com/weapi/song/enhance/player/url', data);
 }
+*/
 
 const musicinfo = (id) => {
   const data = {
@@ -94,6 +96,7 @@ const musicinfo = (id) => {
   return sendRequest('http://music.163.com/weapi/v3/song/detail', data);
 }
 
+/*
 const postFile = (url) => {
   const options = {
     url: url,
@@ -116,10 +119,11 @@ const postFile = (url) => {
     });
   });
 }
+*/
 
 module.exports = {
   playlist,
-  musicurl,
+  // musicurl,
   musicinfo,
-  postFile
+  // postFile,
 }
