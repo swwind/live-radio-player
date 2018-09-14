@@ -85,7 +85,6 @@ body, html {
 .stage .spectrum .spectrum-bou {
   display: inline-block;
   width: 10px;
-  min-height: 10px;
   background-color: #66ccff;
 }
 .stage .image {

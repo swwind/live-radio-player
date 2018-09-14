@@ -158,3 +158,7 @@ const randomToken = (len) => {
   }
   return res;
 }
+
+const randomItem = (arr) => {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
