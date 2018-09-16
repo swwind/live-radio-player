@@ -18,20 +18,7 @@ window.addEventListener('keydown', (e) => {
   }
 });
 
-$('#add-effect').addEventListener('click', (e) => {
-  const effectType = $('#effect-type').selectedOptions[0].value;
-  const comp = new (getClassByName(effectType));
-  viewer.addComp(comp);
-  comp.controller.elem.show();
-});
-
-const viewer = new Viewer();
-
-const draw = (time) => {
-  viewer.render(playList.getInfo());
-  requestAnimationFrame(draw);
-}
-draw();
+const viewer = Viewer();
 
 // viewer cache
 if (localStorage.getItem('viewer cache')) {
@@ -47,4 +34,9 @@ setInterval(() => {
   localStorage.setItem('player cache', playList.exportList());
 }, 1000);
 
-window.playList = playList;
+// render interval
+const draw = (time) => {
+  viewer.render(playList.getInfo());
+  requestAnimationFrame(draw);
+}
+draw();

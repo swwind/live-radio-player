@@ -1,8 +1,5 @@
 'use strict';
 
-const backend = require('./backend');
-const jsmediatags = require('jsmediatags');
-
 const padStart = (n, m) => {
   return '0'.repeat(m - n.toString().length) + n;
 }
@@ -23,51 +20,7 @@ const xrand = (a, b) => {
   return a + rand(b - a + 1);
 }
 
-const arrayToBase64 = (arr) => {
-  let res = '';
-  arr.forEach((c) => {
-    res += String.fromCharCode(c);
-  });
-  return btoa(res);
-}
-
-const encodeCover = (pic) => {
-  return pic ? 'data:' + pic.format + ';base64,' + arrayToBase64(pic.data) : '';
-}
-
-const parseTrackInfo = (file) => {
-  return new Promise((resolve, reject) => {
-    jsmediatags.read(file, {
-      onSuccess: (data) => {
-        const cover = encodeCover(data.tags.picture);
-        resolve({
-          cover: cover,
-          album: data.tags.album,
-          title: data.tags.title,
-          artist: data.tags.artist
-        });
-      },
-      onError: reject
-    });
-  });
-}
-
-const parseTrackInfoFromNetEaseCloudMusic = (id, title) => {
-  return new Promise((resolve, reject) => {
-    backend.netease.musicinfo(id).then((res) => {
-      const info = res.songs[0];
-      resolve({
-        cover: info.al.picUrl,
-        album: info.al.name,
-        title: info.name,
-        artist: info.ar.map((art) => art.name).join('/')
-      });
-    }, (err) => {
-      resolve({ title });
-    });
-  });
-}
-
+/*
 const spanButton = (text, title, onclick, classes) => {
   const span = document.createElement('span');
   span.innerText = text;
@@ -82,7 +35,7 @@ const spanButton = (text, title, onclick, classes) => {
   else typeof classes === 'string' && span.classList.add(classes);
   return span;
 }
-/*
+
 const moveUpElement = (node) => {
   if (node.previousElementSibling) {
     const prev = node.previousElementSibling;
@@ -124,11 +77,11 @@ const moveDownInArray = (arr, elem) => {
 const randomLinearFunction = (now, ...args) => {
   return [...args].map((w) => Math.sin(now / w)).reduce((a, b) => a * b);
 }
-
+/*
 const last = (array) => {
   return array[array.length - 1];
 }
-
+*/
 const randomToken = (len) => {
   const str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789";
   let res = '';
@@ -146,6 +99,5 @@ module.exports = {
   resolveTime,
   randomItem,
   randomToken,
-  parseTrackInfo,
-  parseTrackInfoFromNetEaseCloudMusic,
+  randomLinearFunction,
 }

@@ -5,7 +5,8 @@ const Component = require('./Component.js');
 class TextComp extends Component {
   constructor(config) {
     super(config);
-    this.elem.classList.add('text');
+    this.type = 'Text';
+    this.elem.classList.add(this.type.toLowerCase());
     this.controller.init({
       name: 'Text Configurations',
       value: [{

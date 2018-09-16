@@ -25,7 +25,7 @@ class Controller {
       type: 'string',
       default: 'My ' + config.name,
       onChange: (value) => {
-        this.alias = value;
+        _this.that.name = value;
       }
     }, ... config.value];
 
@@ -33,6 +33,7 @@ class Controller {
       if (_this.oldConfig.has(cfg.name)) {
         cfg.default = _this.oldConfig.get(cfg.name);
       }
+      _this._config.set(cfg.name, cfg.default);
       if ('function' === typeof cfg.onChange) {
         _this._events.set(cfg.name, cfg.onChange);
         cfg.onChange.call(_this.that, cfg.default);
@@ -46,6 +47,7 @@ class Controller {
       template,
       data: {
         configs,
+        values: _this._config,
         title: 'Hello world',
         show: false,
         top: 300,
@@ -62,19 +64,16 @@ class Controller {
     });
   }
 
-  getElement() {
-  }
-
   getConfig() {
     return this._config;
   }
 
-  remove() {
+  show() {
+    this.elem.show = true;
   }
 
-  show() {
-    console.log(this.elem);
-    this.elem.show = true;
+  remove() {
+    this.elem.remove();
   }
 }
 

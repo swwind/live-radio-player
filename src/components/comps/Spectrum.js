@@ -7,7 +7,8 @@ const getTransformedSpectrum = require('./algo/tf-spectrum.js');
 class Spectrum extends Component {
   constructor(config) {
     super(config);
-    this.elem.classList.add('spectrum');
+    this.type = 'Spectrum';
+    this.elem.classList.add(this.type.toLowerCase());
     this.bous = [];
     this.exampleBou = document.createElement('div');
     this.exampleBou.classList.add('spectrum-bou');
@@ -73,8 +74,8 @@ class Spectrum extends Component {
       }, {
         name: 'Spectrum Align',
         type: 'select',
-        options: ['flex-start', 'flex-end', 'center'],
-        default: 2,
+        options: ['center', 'flex-start', 'flex-end'],
+        default: 0,
         onChange: (value) => {
           this.elem.style.alignItems = value;
         }

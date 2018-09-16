@@ -6,23 +6,23 @@ class Component {
   constructor(oldConfig) {
     this.elem = document.createElement('div');
     this.elem.classList.add('comp');
-    this.controller = new Controller(oldConfig);
+    this.controller = new Controller(this, oldConfig);
   }
-  getAlias() {
-    return this.controller.getAlias();
+  getConfig(index) {
+    const config = this.controller.getConfig();
+    config.set('type', this.type);
+    config.set('index', index);
+    return config;
   }
-  getElement() {
-    return this.elem;
+  mount(stage) {
+    stage.appendChild(this.elem);
+  }
+  show() {
+    this.controller.show();
   }
   remove() {
     this.elem.remove();
     this.controller.remove();
-  }
-  getConfig(index) {
-    const config = this.controller.getConfig();
-    config.set('name', this.constructor.name);
-    config.set('index', index);
-    return config;
   }
 }
 

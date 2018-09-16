@@ -8,7 +8,53 @@ const $$ = (name) => document.getElementById(name);
 
 const Vue = require('../dist/vue.min.js');
 
-const { randomToken, parseTrackInfoFromNetEaseCloudMusic, parseTrackInfo, randomItem } = require('../util.js');
+const { randomToken, randomItem } = require('../util.js');
+
+const backend = require('../backend');
+const jsmediatags = require('jsmediatags');
+
+const parseTrackInfoFromFile = (file) => {
+  const arrayToBase64 = (arr) => {
+    let res = '';
+    for (let i = 0; i < arr.length; ++ i) {
+      res += String.fromCharCode(arr[i]);
+    }
+    return btoa(res);
+  }
+  const encodeCover = (pic) => {
+    return pic ? 'data:' + pic.format + ';base64,' + arrayToBase64(pic.data) : '';
+  }
+  return new Promise((resolve, reject) => {
+    jsmediatags.read(file, {
+      onSuccess: (data) => {
+        const cover = encodeCover(data.tags.picture);
+        resolve({
+          cover: cover,
+          album: data.tags.album,
+          title: data.tags.title,
+          artist: data.tags.artist
+        });
+      },
+      onError: reject
+    });
+  });
+}
+
+const parseTrackInfoFromNetEaseCloudMusic = (id, title) => {
+  return new Promise((resolve, reject) => {
+    backend.netease.musicinfo(id).then((res) => {
+      const info = res.songs[0];
+      resolve({
+        cover: info.al.picUrl,
+        album: info.al.name,
+        title: info.name,
+        artist: info.ar.map((art) => art.name).join('/')
+      });
+    }, (err) => {
+      resolve({ title });
+    });
+  });
+}
 
 class CssController {
   constructor() {
@@ -100,7 +146,7 @@ module.exports = () => new Vue({
           const extension = path.extname(track.path);
           const defaultName = path.basename(track.path, extension);
 
-          parseTrackInfo(track.path).then((data) => {
+          parseTrackInfoFromFile(track.path).then((data) => {
             data.title = data.title || defaultName;
             resolve({ data, token, url });
           }).catch((err) => {

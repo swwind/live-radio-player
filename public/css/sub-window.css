@@ -6,6 +6,7 @@
   box-shadow: 0 0 5px #ccc;
   user-select: none;
   transition: opacity .5s, box-shadow-color .5s;
+  width: 350px;
 }
 .sub-window.moving {
   opacity: .7;
@@ -41,7 +42,7 @@
   padding: 10px;
   overflow-y: auto;
   overflow-x: hidden;
-  height: 500px;
+  height: 400px;
 }
 .sw-container > div {
   display: flex;

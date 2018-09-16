@@ -2,10 +2,13 @@
 
 const Component = require('./Component.js');
 
+const { randomLinearFunction } = require('../../util.js');
+
 class ImageComp extends Component {
   constructor(config) {
     super(config);
-    this.elem.classList.add('image');
+    this.type = 'Image';
+    this.elem.classList.add(this.type.toLowerCase());
     this.animate = {
       width: 0,
       height: 0,
