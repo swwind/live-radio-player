@@ -1,5 +1,7 @@
 'use strict';
 
+const Component = require('./Component.js');
+
 class TextComp extends Component {
   constructor(config) {
     super(config);
@@ -74,3 +76,5 @@ class TextComp extends Component {
     this.elem.innerText = text;
   }
 }
+
+module.exports = TextComp;

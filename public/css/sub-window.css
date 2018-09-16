@@ -41,33 +41,34 @@
   padding: 10px;
   overflow-y: auto;
   overflow-x: hidden;
+  height: 500px;
 }
-.c-div > div {
+.sw-container > div {
   display: flex;
   justify-content: space-between;
   margin: 0 0 5px 0;
 }
-.c-div .c-multistring {
+.sw-container .c-multistring {
   display: block;
 }
-.c-div .c-multistring textarea {
+.sw-container .c-multistring textarea {
   width: 100%;
   min-width: 100%;
   max-width: 100%;
   box-sizing: border-box;
   min-height: 100px;
 }
-.c-div input, .c-div select {
+.sw-container input, .sw-container select {
   width: 50%;
   box-sizing: border-box;
 }
-.c-div input, .c-div textarea, .c-div select {
+.sw-container input, .sw-container textarea, .sw-container select {
   outline: none;
   padding: 4px 5px;
   border: 1px solid #ccc;
   transition: border-color .2s;
 }
-.c-div input:focus, .c-div textarea:focus {
+.sw-container input:focus, .sw-container textarea:focus {
   border: 1px solid #666;
   transition: border-color .2s;
 }

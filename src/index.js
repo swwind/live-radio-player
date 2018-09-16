@@ -3,6 +3,9 @@
 const $ = (name) => document.querySelector(name);
 const $$ = (name) => document.getElementById(name);
 
+const PlayList = require('./components/PlayList.js');
+const Viewer = require('./components/Viewer.js');
+
 const dashboard = $('.dashboard');
 
 const playList = PlayList();

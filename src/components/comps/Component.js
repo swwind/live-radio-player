@@ -1,5 +1,7 @@
 'use strict';
 
+const Controller = require('../Controller');
+
 class Component {
   constructor(oldConfig) {
     this.elem = document.createElement('div');
@@ -23,3 +25,5 @@ class Component {
     return config;
   }
 }
+
+module.exports = Component;

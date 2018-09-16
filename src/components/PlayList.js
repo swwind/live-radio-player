@@ -3,7 +3,31 @@
 const fs = require('fs');
 const path = require('path');
 
-const PlayList = () => new Vue({
+const $ = (name) => document.querySelector(name);
+const $$ = (name) => document.getElementById(name);
+
+const Vue = require('../dist/vue.min.js');
+
+const { randomToken, parseTrackInfoFromNetEaseCloudMusic, parseTrackInfo, randomItem } = require('../util.js');
+
+class CssController {
+  constructor() {
+    this.elem = document.createElement('style');
+    this.props = new Map();
+    document.head.appendChild(this.elem);
+  }
+
+  set(key, value) {
+    this.props.set(key, value);
+    this.render();
+  }
+
+  render() {
+    this.elem.innerHTML = ':root{' + Array.from(this.props).map(([key, value]) => `${key}:${value}`).join(';') + '}';
+  }
+}
+
+module.exports = () => new Vue({
   el: '#play-list',
   data: {
     files: new Map(),
@@ -18,7 +42,7 @@ const PlayList = () => new Vue({
     this.audioSrc = this.audioContext.createMediaElementSource(this.audioElement);
     this.audioSrc.connect(this.analyser);
     this.analyser.connect(this.audioContext.destination);
-    this.analyser.fftSize = maxFftSize;
+    this.analyser.fftSize = 16384;
     this.analyser.smoothingTimeConstant = 0.1;
     this.frequency = new Uint8Array(this.analyser.frequencyBinCount);
   },
@@ -167,4 +191,5 @@ const PlayList = () => new Vue({
     }
   }
 });
+
 

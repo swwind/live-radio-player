@@ -1,5 +1,7 @@
 'use strict';
 
+const Component = require('./Component.js');
+
 class ImageComp extends Component {
   constructor(config) {
     super(config);
@@ -125,3 +127,5 @@ class ImageComp extends Component {
     this.elem.style.transform = `matrix(${matrix})`;
   }
 }
+
+module.exports = ImageComp;

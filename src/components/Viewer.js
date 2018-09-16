@@ -1,5 +1,10 @@
 'use strict';
 
+const $ = (name) => document.querySelector(name);
+const $$ = (name) => document.getElementById(name);
+
+const { resolveTime } = require('../util.js');
+
 class Viewer {
   constructor() {
     this.comps = [];
@@ -12,7 +17,7 @@ class Viewer {
   addComp(comp) {
     this.comps.push(comp);
     this.body.appendChild(comp.getElement());
-    $('.configs').appendChild(comp.controller.getElement());
+    // $('.configs').appendChild(comp.controller.getElement());
     this.elem.insertBefore(this._createItemElement(comp), this.elem.firstChild);
   }
 
@@ -22,34 +27,38 @@ class Viewer {
     const span1 = document.createElement('span');
     span1.innerText = comp.constructor.name;
     span1.classList.add('effect-type');
-    const span2 = document.createElement('span');
-    span2.innerText = comp.getAlias();
-    span2.classList.add('flex1');
+    span1.addEventListener('click', (e) => {
+      console.log('hello world');
+      comp.controller.show();
+    })
+    // const span2 = document.createElement('span');
+    // span2.innerText = comp.getAlias();
+    // span2.classList.add('flex1');
     div.appendChild(span1);
-    div.appendChild(span2);
-    Object.defineProperty(comp.controller, 'alias', {
-      set(value) {
-        span2.innerText = value;
-        return true;
-      }
-    });
-    div.appendChild(spanButton('^', 'move up', (e) => {
-      moveUpElement(e.target.parentNode);
-      moveDownElement(comp.elem);
-      this.comps = moveDownInArray(this.comps, comp);
-    }));
-    div.appendChild(spanButton('v', 'move down', (e) => {
-      moveDownElement(e.target.parentNode);
-      moveUpElement(comp.elem);
-      this.comps = moveUpInArray(this.comps, comp);
-    }));
-    div.appendChild(spanButton('c', 'config', (e) => {
-      comp.controller.elem.show();
-    }));
-    div.appendChild(spanButton('x', 'remove', (e) => {
-      this.removeComp(comp);
-      div.remove();
-    }));
+    // div.appendChild(span2);
+    // Object.defineProperty(comp.controller, 'alias', {
+    //   set(value) {
+    //     span2.innerText = value;
+    //     return true;
+    //   }
+    // });
+    // div.appendChild(spanButton('^', 'move up', (e) => {
+    //   moveUpElement(e.target.parentNode);
+    //   moveDownElement(comp.elem);
+    //   this.comps = moveDownInArray(this.comps, comp);
+    // }));
+    // div.appendChild(spanButton('v', 'move down', (e) => {
+    //   moveDownElement(e.target.parentNode);
+    //   moveUpElement(comp.elem);
+    //   this.comps = moveUpInArray(this.comps, comp);
+    // }));
+    // div.appendChild(spanButton('c', 'config', (e) => {
+    //   // comp.controller.elem.show();
+    // }));
+    // div.appendChild(spanButton('x', 'remove', (e) => {
+    //   this.removeComp(comp);
+    //   div.remove();
+    // }));
     return div;
   }
 
@@ -81,10 +90,11 @@ class Viewer {
     arr.map(x => new Map(x)).sort((m1, m2) => {
       return m1.get('index') - m2.get('index');
     }).forEach((item) => {
-      this.addComp(new (getClassByName(item.get('name')))(item));
+      const Item = require(`./comps/${item.get('name')}.js`);
+      this.addComp(new Item(item));
     });
   }
 }
 
-
+module.exports = Viewer;
 

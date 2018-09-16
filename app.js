@@ -38,7 +38,7 @@ function createWindow () {
     mainWindow = null;
   });
 
-  // mainWindow.webContents.openDevTools(); // Shift + Ctrl + I not work
+  mainWindow.webContents.openDevTools(); // Shift + Ctrl + I not work
 
   Menu.setApplicationMenu(null);
 }

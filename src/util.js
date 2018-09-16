@@ -1,16 +1,16 @@
 'use strict';
 
-const backend = require('./js/backend');
+const backend = require('./backend');
 const jsmediatags = require('jsmediatags');
+
+const padStart = (n, m) => {
+  return '0'.repeat(m - n.toString().length) + n;
+}
 
 const resolveTime = (m) => {
   if (m === undefined || isNaN(m)) return '--:--';
   const rm = Math.round(m);
   return padStart(Math.floor(rm / 60), 2) + ':' + padStart(rm % 60, 2);
-}
-
-const padStart = (n, m) => {
-  return '0'.repeat(m - n.toString().length) + n;
 }
 
 // [0, n)
@@ -68,23 +68,6 @@ const parseTrackInfoFromNetEaseCloudMusic = (id, title) => {
   });
 }
 
-class CssController {
-  constructor() {
-    this.elem = document.createElement('style');
-    this.props = new Map();
-    document.head.appendChild(this.elem);
-  }
-
-  set(key, value) {
-    this.props.set(key, value);
-    this.render();
-  }
-
-  render() {
-    this.elem.innerHTML = ':root{' + Array.from(this.props).map(([key, value]) => `${key}:${value}`).join(';') + '}';
-  }
-}
-
 const spanButton = (text, title, onclick, classes) => {
   const span = document.createElement('span');
   span.innerText = text;
@@ -99,11 +82,7 @@ const spanButton = (text, title, onclick, classes) => {
   else typeof classes === 'string' && span.classList.add(classes);
   return span;
 }
-
-const getClassByName = (name) => {
-  return (Function('return ' + name))();
-}
-
+/*
 const moveUpElement = (node) => {
   if (node.previousElementSibling) {
     const prev = node.previousElementSibling;
@@ -141,7 +120,7 @@ const moveDownInArray = (arr, elem) => {
   }
   return arr;
 }
-
+*/
 const randomLinearFunction = (now, ...args) => {
   return [...args].map((w) => Math.sin(now / w)).reduce((a, b) => a * b);
 }
@@ -161,4 +140,12 @@ const randomToken = (len) => {
 
 const randomItem = (arr) => {
   return arr[Math.floor(Math.random() * arr.length)];
+}
+
+module.exports = {
+  resolveTime,
+  randomItem,
+  randomToken,
+  parseTrackInfo,
+  parseTrackInfoFromNetEaseCloudMusic,
 }

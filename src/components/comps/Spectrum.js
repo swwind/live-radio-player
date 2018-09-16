@@ -1,5 +1,9 @@
 'use strict';
 
+const Component = require('./Component.js');
+
+const getTransformedSpectrum = require('./algo/tf-spectrum.js');
+
 class Spectrum extends Component {
   constructor(config) {
     super(config);
@@ -102,3 +106,4 @@ class Spectrum extends Component {
   }
 }
 
+module.exports = Spectrum;

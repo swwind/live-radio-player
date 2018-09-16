@@ -29,7 +29,7 @@ const userAgentList = [
 ];
 
 const randomUA = () => {
-  return userAgentList[rand(userAgentList.length)];
+  return userAgentList[Math.floor(Math.random() * userAgentList.length)];
 }
 
 const sendRequest = (url, data) => {
