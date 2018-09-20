@@ -72,6 +72,7 @@ class TextComp extends Component {
   render(cfg) {
     const text = this.text.replace(/%[^%]+%/g, (t) => {
       const name = t.slice(1, t.length - 1);
+      if (!name) return '%';
       return cfg[name] || cfg.trackInfo[name] || "N/A";
     });
     this.elem.innerText = text;

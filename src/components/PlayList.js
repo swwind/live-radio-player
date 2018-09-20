@@ -8,7 +8,7 @@ const $$ = (name) => document.getElementById(name);
 
 const Vue = require('../dist/vue.min.js');
 
-const { randomToken, randomItem } = require('../util.js');
+const { randomToken, randomItem, createImage } = require('../util.js');
 
 const backend = require('../backend');
 const jsmediatags = require('jsmediatags');
@@ -26,10 +26,9 @@ const parseTrackInfoFromFile = (file) => {
   }
   return new Promise((resolve, reject) => {
     jsmediatags.read(file, {
-      onSuccess: (data) => {
-        const cover = encodeCover(data.tags.picture);
+      onSuccess: async (data) => {
         resolve({
-          cover: cover,
+          cover: await createImage(encodeCover(data.tags.picture)),
           album: data.tags.album,
           title: data.tags.title,
           artist: data.tags.artist
@@ -42,13 +41,13 @@ const parseTrackInfoFromFile = (file) => {
 
 const parseTrackInfoFromNetEaseCloudMusic = (id, title) => {
   return new Promise((resolve, reject) => {
-    backend.netease.musicinfo(id).then((res) => {
+    backend.netease.musicinfo(id).then(async (res) => {
       const info = res.songs[0];
       resolve({
-        cover: info.al.picUrl,
+        cover: await createImage(info.al.picUrl),
         album: info.al.name,
         title: info.name,
-        artist: info.ar.map((art) => art.name).join('/')
+        artist: info.ar.map((art) => art.name).join(' / ')
       });
     }, (err) => {
       resolve({ title });
@@ -56,29 +55,14 @@ const parseTrackInfoFromNetEaseCloudMusic = (id, title) => {
   });
 }
 
-class CssController {
-  constructor() {
-    this.elem = document.createElement('style');
-    this.props = new Map();
-    document.head.appendChild(this.elem);
-  }
-
-  set(key, value) {
-    this.props.set(key, value);
-    this.render();
-  }
-
-  render() {
-    this.elem.innerHTML = ':root{' + Array.from(this.props).map(([key, value]) => `${key}:${value}`).join(';') + '}';
-  }
-}
+const defaultCover = new Image();
+defaultCover.src = './img/default-cover.svg';
 
 module.exports = () => new Vue({
   el: '#play-list',
   data: {
     files: new Map(),
     trackInfo: {},
-    cssc: new CssController(),
     playing: '',
   },
   created() {
@@ -89,8 +73,9 @@ module.exports = () => new Vue({
     this.audioSrc.connect(this.analyser);
     this.analyser.connect(this.audioContext.destination);
     this.analyser.fftSize = 16384;
-    this.analyser.smoothingTimeConstant = 0.1;
+    this.analyser.smoothingTimeConstant = 0.3;
     this.frequency = new Uint8Array(this.analyser.frequencyBinCount);
+    this.cover = defaultCover;
   },
   methods: {
 
@@ -195,9 +180,9 @@ module.exports = () => new Vue({
       return randomItem(Array.from(this.files.keys()));
     },
 
-    playTrackByInfo({ data, buffer, token, url }) {
+    playTrackByInfo({ data, token, url }) {
       this.playing = token;
-      this.cssc.set('--album-cover', 'url(' + (data.cover || '/img/default-cover.svg') + ')');
+      this.cover = data.cover || defaultCover;
       this.trackInfo = data;
       this.audioElement.src = url;
       this.registerNextTrack(this.getNextTrackToken(token));
@@ -220,7 +205,8 @@ module.exports = () => new Vue({
         trackInfo: this.trackInfo,
         duration: this.audioElement.duration,
         progress: this.audioElement.currentTime,
-        high
+        high,
+        cover: this.cover,
       };
     },
 

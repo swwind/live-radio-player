@@ -19,15 +19,18 @@ module.exports = () => new Vue({
     comps: [],
   },
   created() {
-    this.stage = document.createElement('div');
+    this.stage = document.createElement('canvas');
     this.stage.classList.add('stage');
+    this.ctx = this.stage.getContext('2d');
+    this.stage.width  = window.innerWidth;
+    this.stage.height = window.innerHeight;
     document.body.insertBefore(this.stage, document.body.firstChild);
   },
   methods: {
 
     addComp(comp) {
       this.comps.push(comp);
-      comp.mount(this.stage);
+      // comp.mount(this.stage);
     },
 
     addNewComp(type) {
@@ -43,8 +46,9 @@ module.exports = () => new Vue({
       state.frequency = state.frequency;
       state.duration = resolveTime(state.duration);
       state.progress = resolveTime(state.progress);
+      this.ctx.clearRect(0, 0, this.stage.width, this.stage.height);
       this.comps.forEach((comp) => {
-        comp.render(state);
+        comp.render(state, this.ctx);
       });
     },
 

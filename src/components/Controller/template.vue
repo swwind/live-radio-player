@@ -9,7 +9,7 @@
       <input v-if="cfg.type === 'string'" type="string"
         @input="change(cfg.name, $event.target.value)" :value="values.get(cfg.name)">
       <input v-if="cfg.type === 'number'" type="number"
-        @input="change(cfg.name, $event.target.value)" :value="values.get(cfg.name)">
+        @input="change(cfg.name,+$event.target.value)" :value="values.get(cfg.name)">
       <input v-if="cfg.type === 'color'" type="color"
         @input="change(cfg.name, $event.target.value)" :value="values.get(cfg.name)">
       <textarea v-if="cfg.type === 'multistring'" v-text="values.get(cfg.name)"

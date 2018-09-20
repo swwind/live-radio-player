@@ -2,7 +2,7 @@
 
 const Component = require('./Component.js');
 
-const { randomLinearFunction } = require('../../util.js');
+const { randomLinearFunction, canvasTransform } = require('../../util.js');
 
 class ImageComp extends Component {
   constructor(config) {
@@ -19,58 +19,59 @@ class ImageComp extends Component {
       autoRotate: false,
       randomOffset: false,
     };
+    this.style = {};
     this.controller.init({
       name: 'Image Configurations',
       value: [{
         name: 'X',
-        type: 'string',
-        default: '0px',
+        type: 'number',
+        default: 0,
         onChange: (value) => {
-          this.elem.style.top = value;
+          this.style.top = value;
         }
       }, {
         name: 'Y',
-        type: 'string',
-        default: '0px',
+        type: 'number',
+        default: 0,
         onChange: (value) => {
-          this.elem.style.left = value;
+          this.style.left = value;
         }
       }, {
         name: 'Width',
-        type: 'string',
-        default: '200px',
+        type: 'number',
+        default: 200,
         onChange: (value) => {
-          this.elem.style.width = value;
-          this.animate.width = this.elem.width;
+          this.style.width = value;
+          this.animate.width = value;
         }
       }, {
         name: 'Height',
-        type: 'string',
-        default: '200px',
+        type: 'number',
+        default: 200,
         onChange: (value) => {
-          this.elem.style.height = value;
-          this.animate.height = this.elem.height;
+          this.style.height = value;
+          this.animate.height = value;
         }
       }, {
         name: 'Background Image',
         type: 'string',
         default: 'var(--album-cover)',
         onChange: (value) => {
-          this.elem.style.backgroundImage = value;
+          this.style.backgroundImage = value;
         }
       }, {
         name: 'Background Color',
         type: 'color',
         default: '#fff',
         onChange: (value) => {
-          this.elem.style.backgroundColor = value;
+          this.style.backgroundColor = value;
         }
       }, {
         name: 'Radius',
         type: 'string',
         default: '50%',
         onChange: (value) => {
-          this.elem.style.borderRadius = value;
+          this.style.borderRadius = value;
         }
       }, {
         name: 'Animation',
@@ -104,7 +105,12 @@ class ImageComp extends Component {
     });
   }
 
-  render({ high }) {
+  render({ high, cover }, ctx) {
+    const y = this.style.top;
+    const x = this.style.left;
+    const w = this.style.width;
+    const h = this.style.height;
+
     const now = + new Date();
     const scaleX = (this.animate.shake ? high * 0.5 + 1 : 1) * this.animate.scaleX;
     const scaleY = (this.animate.shake ? high * 0.5 + 1 : 1) * this.animate.scaleY;
@@ -118,6 +124,7 @@ class ImageComp extends Component {
       translateY = (pt3 - pt4) / 2 * 100;
     }
     const deg = this.animate.autoRotate ? - new Date() / 3000 : this.animate.rotate;
+    /*
     const sindeg = Math.sin(deg);
     const cosdeg = Math.cos(deg);
     const matrix = [0, 0, 0, 0, 0, 0];
@@ -127,7 +134,19 @@ class ImageComp extends Component {
     matrix[3] =   cosdeg * scaleY;
     matrix[4] = translateX;
     matrix[5] = translateY;
-    this.elem.style.transform = `matrix(${matrix})`;
+    */
+
+    ctx.save();
+    ctx.setTransform(...canvasTransform(x, y, w, h, deg, scaleX, scaleY, 0, 0));
+
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.arc(x + w / 2, y + h / 2, w / 2, 0, Math.PI * 2);
+    ctx.closePath();
+    ctx.clip();
+
+    ctx.drawImage(cover, x, y, w, h);
+    ctx.restore();
   }
 }
 

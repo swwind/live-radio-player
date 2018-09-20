@@ -95,9 +95,30 @@ const randomItem = (arr) => {
   return arr[rand(arr.length)];
 }
 
+const createImage = (src) => {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    image.src = src;
+    image.addEventListener('load', e => resolve(image));
+    image.addEventListener('error', e => reject(e));
+  });
+}
+
+const canvasTransform = (x, y, w, h, r, sx, sy, tx, ty) => {
+  const sin = Math.sin(r);
+  const cos = Math.cos(r);
+  const cx = x + w / 2;
+  const cy = y + h / 2;
+  const nx = cos * cx * sx + sin * cy * sy;
+  const ny = sin * cx * sx - cos * cy * sy;
+  return [ cos * sx, - sin * sx, sin * sy, cos * sy, cx - nx + tx, ny + cy + ty ];
+}
+
 module.exports = {
   resolveTime,
   randomItem,
   randomToken,
   randomLinearFunction,
+  createImage,
+  canvasTransform,
 }
