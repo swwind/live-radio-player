@@ -83,7 +83,7 @@ const last = (array) => {
 }
 */
 const randomToken = (len) => {
-  const str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789";
+  const str = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789';
   let res = '';
   while (len --) {
     res += str.charAt(rand(str.length));
@@ -92,7 +92,7 @@ const randomToken = (len) => {
 }
 
 const randomItem = (arr) => {
-  return arr[Math.floor(Math.random() * arr.length)];
+  return arr[rand(arr.length)];
 }
 
 module.exports = {
