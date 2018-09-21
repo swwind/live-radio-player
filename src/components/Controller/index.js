@@ -1,11 +1,6 @@
 'use strict';
 
-const fs = require('fs');
 const Vue = require('../../dist/vue.min.js');
-
-require.extensions['.vue'] = (module, filename) => {
-    module.exports = fs.readFileSync(filename, 'utf8');
-};
 
 const template = require('./template.vue');
 
@@ -22,8 +17,8 @@ class Controller {
     this.config.name = name;
   }
 
-  addConfig(name, type, default, event, options) {
-    this.config.value.push({ name, type, default, event, options });
+  addConfig(name, type, defaults, event, options) {
+    this.config.value.push({ name, type, defaults, event, options });
   }
 
   init() {
@@ -33,7 +28,7 @@ class Controller {
     const configs = [{
       name: 'Alias',
       type: 'string',
-      default: 'My ' + config.name,
+      defaults: 'My ' + config.name,
       event: (value) => {
         _this.that.name = value;
       }
@@ -41,12 +36,12 @@ class Controller {
 
     configs.forEach((cfg) => {
       if (_this.oldConfig.has(cfg.name)) {
-        cfg.default = _this.oldConfig.get(cfg.name);
+        cfg.defaults = _this.oldConfig.get(cfg.name);
       }
-      _this._config.set(cfg.name, cfg.default);
+      _this._config.set(cfg.name, cfg.defaults);
       if ('function' === typeof cfg.event) {
         _this._events.set(cfg.name, cfg.event);
-        cfg.event.call(_this.that, cfg.default);
+        cfg.event.call(_this.that, cfg.defaults);
       }
     });
 
@@ -62,6 +57,7 @@ class Controller {
         show: false,
         top: 300,
         left: 700,
+        draging: false,
       },
       methods: {
         change(name, value) {

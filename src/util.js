@@ -104,14 +104,14 @@ const createImage = (src) => {
   });
 }
 
-const canvasTransform = (x, y, w, h, r, sx, sy, tx, ty) => {
+const canvasTransform = (x, y, w, h, r, sx, sy) => {
   const sin = Math.sin(r);
   const cos = Math.cos(r);
   const cx = x + w / 2;
   const cy = y + h / 2;
   const nx = cos * cx * sx + sin * cy * sy;
   const ny = sin * cx * sx - cos * cy * sy;
-  return [ cos * sx, - sin * sx, sin * sy, cos * sy, cx - nx + tx, ny + cy + ty ];
+  return [ cos * sx, - sin * sx, sin * sy, cos * sy, cx - nx, ny + cy ];
 }
 
 module.exports = {

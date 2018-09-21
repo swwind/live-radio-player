@@ -8,64 +8,77 @@ class Spectrum extends Component {
   constructor(config) {
     super(config);
     this.type = 'Spectrum';
-    this.elem.classList.add(this.type.toLowerCase());
-    this.bous = [];
-    this.exampleBou = document.createElement('div');
-    this.exampleBou.classList.add('spectrum-bou');
+
+    this.style = {};
 
     this.ctrl.setName('Spectrum Configurations');
     this.ctrl.addConfig('X', 'number', 0, (value) => {
-      this.elem.style.top = value;
+      this.style.top = value;
     });
     this.ctrl.addConfig('Y', 'number', 0, (value) => {
-      this.elem.style.left = value;
+      this.style.left = value;
     });
     this.ctrl.addConfig('Main Color', 'color', '#66ccff', (value) => {
-      this.exampleBou.style.backgroundColor = value;
-      this.bous.forEach((bou) => {
-        bou.style.backgroundColor = value;
-      });
+      this.style.color = value;
     });
     this.ctrl.addConfig('Spectrum Height', 'number', 200, (value) => {
-      this.spectrumHeight = parseFloat(value);
-      this.elem.style.height = value;
-      this.elem.style.lineHeight = value;
+      this.style.height = value;
     });
     this.ctrl.addConfig('Spectrum Width', 'number', 1000, (value) => {
-      this.elem.style.width = value;
+      this.style.width = value;
     });
     this.ctrl.addConfig('Spectrum Size', 'number', 64, (value) => {
-      this.adjustSpectrumSize(value);
+      this.style.size = value;
     });
     this.ctrl.addConfig('Spectrum Align', 'select', 0, (value) => {
-      this.elem.style.alignItems = value;
-    }, ['center', 'flex-start', 'flex-end']);
+      this.style.align = value;
+    }, ['center', 'top', 'bottom']);
 
     this.ctrl.init();
 
   }
 
-  adjustSpectrumSize(now) {
-    while (this.bous.length < now) this.addBou();
-    while (this.bous.length > now) this.removeBou();
-  }
+  render({ frequency }, ctx) {
+    const { size, top, left, color, width, height, align } = this.style;
 
-  addBou() {
-    const bou = this.exampleBou.cloneNode();
-    this.elem.appendChild(bou);
-    this.bous.push(bou);
-  }
+    if (size <= 1) {
+      return;
+    }
 
-  removeBou() {
-    this.bous.shift().remove();
-  }
+    const res = getTransformedSpectrum(frequency, size);
 
-  render({ frequency }) {
-    window.spectrumSize = this.bous.length;
-    const spectrum = getTransformedSpectrum(frequency);
-    this.bous.forEach((bou, i) => {
-      bou.style.height = spectrum[i] + '%';
-    });
+    let pre_width = 10;
+    let pre_space = 0;
+    if (pre_width * size > width) {
+      pre_width = width / size;
+      pre_space = pre_width;
+    } else {
+      pre_space = (width - pre_width) / (size - 1);
+    }
+    ctx.fillStyle = color;
+
+    if (align === 'center') {
+
+      for (let i = 0; i < size; ++ i) {
+        const len = res[i] / 100 * height;
+        ctx.fillRect(left + pre_space * i, top + (height - len) / 2, pre_width, len);
+      }
+
+    } else if (align === 'top') {
+
+      for (let i = 0; i < size; ++ i) {
+        const len = res[i] / 100 * height;
+        ctx.fillRect(left + pre_space * i, top, pre_width, len);
+      }
+
+    } else { // if (align === 'bottom')
+
+      for (let i = 0; i < size; ++ i) {
+        const len = res[i] / 100 * height;
+        ctx.fillRect(left + pre_space * i, top + height - len, pre_width, len);
+      }
+
+    }
   }
 }
 

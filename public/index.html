@@ -10,37 +10,12 @@
     <div class="dashboard">
       <div class="flex1 tracks">
         <h3>Play List</h3>
+        <div id="play-list"></div>
         <audio autoplay type="audio/mp3" controls></audio>
-        <div id="play-list">
-          <input type="file" multiple="multiple" id="add-music" accept="audio/*"
-            @change="addTrackFromFiles($event.target.files)">
-          <input type="number" placeholder="Netease Playlist id" value="737739259"
-            @keydown.enter="loadNetEaseCloudMusicPlayList($event.target.value)">
-          <input type="button" value="remove all" @click="removeAll()">
-          <div class="play-list">
-            <div v-for="item in Array.from(files)" :id="item[0]" class="list-item"
-              :class="{ playing: item[0] === playing }">
-              <span class="span-button flex1" :title="item[1].name"
-                v-text="item[1].name" @click="playTrackFrom(item[0])"></span>
-              <span class="span-button" title="remove"
-                @click="removeTrack(item[0])">x</span>
-            </div>
-          </div>
-        </div>
       </div>
       <div class="flex1 effects">
         <h3>Effects</h3>
-        <div id="effect-list">
-          <input type="button" value="+ Spectrum" @click="addNewComp('Spectrum')">
-          <input type="button" value="+ Image" @click="addNewComp('Image')">
-          <input type="button" value="+ Text" @click="addNewComp('Text')">
-          <div class="effect-list">
-            <div v-for="item in comps" class="list-item" @click="item.show()">
-              <span v-text="item.type"></span>
-              <span v-text="item.name"></span>
-            </div>
-          </div>
-        </div>
+        <div id="effect-list"></div>
       </div>
       <div class="configs"></div>
     </div>

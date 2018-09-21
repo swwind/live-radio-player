@@ -16,33 +16,46 @@
 }
 
 .play-list, .effect-list {
-  background: rgba(255, 255, 255, .7);
-  box-shadow: inset 0 0 10px #666;
   height: 300px;
   width: 100%;
   overflow-y: auto;
   overflow-x: hidden;
   margin: 16px 0;
-  box-sizing: border-box;
+  box-sizing: content-box;
+  border: solid 1px #ccc;
 }
 
 .list-item {
-  height: 25px;
-  line-height: 25px;
+  height: 30px;
+  line-height: 30px;
   background-color: transparent;
-  transition: background-color .2s;
+  transition: background-color .1s;
   white-space: nowrap;
   display: flex;
+  font-family: sans-serif;
+  position: relative;
 }
 .list-item:hover {
-  background-color: #0002;
-  transition: background-color .2s;
+  background-color: #00000010;
+  transition: background-color .1s;
 }
 .list-item span {
   padding: 0 10px;
 }
-.play-list .list-item.playing {
-  color: blue;
+.list-item:before {
+  content: "";
+  width: 0;
+  height: 100%;
+  background-color: #00000030;
+  position: absolute;
+  transition: width .2s;
+}
+.list-item.playing:before {
+  width: 5px;
+  transition: width .2s;
+}
+.list-item.selected {
+  background-color: #00000020;
 }
 .effect-type {
   width: 100px;
@@ -62,6 +75,7 @@ body, html {
   min-height: 100vh;
   width: 100vw;
   overflow: hidden;
+  font-family: sans-serif;
 }
 
 .stage {

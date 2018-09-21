@@ -157,7 +157,8 @@ function transformToVisualBins(array) {
 }
 */
 
-function getTransformedSpectrum(array) {
+function getTransformedSpectrum(array, size) {
+  spectrumSize = size;
   var newArr = normalizeAmplitude(array);
       newArr = averageTransform(newArr);
       newArr = tailTransform(newArr);

@@ -7,6 +7,7 @@ const $ = (name) => document.querySelector(name);
 const $$ = (name) => document.getElementById(name);
 
 const Vue = require('../dist/vue.min.js');
+const template = require('./playlist.vue');
 
 const { randomToken, randomItem, createImage } = require('../util.js');
 
@@ -60,6 +61,7 @@ defaultCover.src = './img/default-cover.svg';
 
 module.exports = () => new Vue({
   el: '#play-list',
+  template,
   data: {
     files: new Map(),
     trackInfo: {},

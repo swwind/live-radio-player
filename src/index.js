@@ -1,5 +1,11 @@
 'use strict';
 
+const fs = require('fs');
+
+require.extensions['.vue'] = (module, filename) => {
+  module.exports = fs.readFileSync(filename, 'utf8');
+};
+
 const $ = (name) => document.querySelector(name);
 const $$ = (name) => document.getElementById(name);
 
@@ -17,6 +23,7 @@ window.addEventListener('keydown', (e) => {
     document.body.classList.toggle('hide-cursor');
   }
 });
+
 
 const viewer = Viewer();
 

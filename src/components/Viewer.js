@@ -6,6 +6,7 @@ const $$ = (name) => document.getElementById(name);
 const { resolveTime } = require('../util.js');
 
 const Vue = require('../dist/vue.min.js');
+const template = require('./viewer.vue');
 
 const cmps = {
   'Text': require('./comps/TextComp.js'),
@@ -15,8 +16,10 @@ const cmps = {
 
 module.exports = () => new Vue({
   el: '#effect-list',
+  template,
   data: {
     comps: [],
+    selecting: null,
   },
   created() {
     this.stage = document.createElement('canvas');
@@ -24,13 +27,16 @@ module.exports = () => new Vue({
     this.ctx = this.stage.getContext('2d');
     this.stage.width  = window.innerWidth;
     this.stage.height = window.innerHeight;
+    window.addEventListener('resize', (e) => {
+      this.stage.width  = window.innerWidth;
+      this.stage.height = window.innerHeight;
+    });
     document.body.insertBefore(this.stage, document.body.firstChild);
   },
   methods: {
 
     addComp(comp) {
       this.comps.push(comp);
-      // comp.mount(this.stage);
     },
 
     addNewComp(type) {
@@ -38,8 +44,27 @@ module.exports = () => new Vue({
       this.addComp(new Component());
     },
 
-    removeComp(index) {
+    removeComp(comp) {
+      let index = this.comps.indexOf(comp);
       this.comps = [...this.comps.slice(0, index), ...this.comps.slice(index + 1)];
+    },
+
+    moveUp(comp) {
+      const index = this.comps.indexOf(comp);
+      if (index > 0) {
+        this.comps[index] = this.comps[index - 1];
+        this.comps[index - 1] = comp;
+      }
+      this.$forceUpdate();
+    },
+
+    moveDown(comp) {
+      const index = this.comps.indexOf(comp);
+      if (index < this.comps.length - 1) {
+        this.comps[index] = this.comps[index + 1];
+        this.comps[index + 1] = comp;
+      }
+      this.$forceUpdate();
     },
 
     render(state) {
@@ -48,7 +73,9 @@ module.exports = () => new Vue({
       state.progress = resolveTime(state.progress);
       this.ctx.clearRect(0, 0, this.stage.width, this.stage.height);
       this.comps.forEach((comp) => {
+        this.ctx.save();
         comp.render(state, this.ctx);
+        this.ctx.restore();
       });
     },
 
@@ -62,7 +89,6 @@ module.exports = () => new Vue({
         return m1.get('index') - m2.get('index');
       }).forEach((item) => {
         const Item = cmps[item.get('type')];
-        console.log(item.get('type'));
         this.addComp(new Item(item));
       });
     }
