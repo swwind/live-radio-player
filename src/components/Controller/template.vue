@@ -1,4 +1,4 @@
-<div class="sub-window" v-show="show" :style="`top:${top}px;left:${left}px;`">
+<div class="sub-window" v-show="show" :style="{ top: top + 'px', left: left + 'px' }">
   <div class="sw-statebar">
     <span class="sw-title" v-text="title"></span>
     <span class="sw-close" @click="show = false">X</span>

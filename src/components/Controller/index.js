@@ -15,16 +15,26 @@ class Controller {
     this.oldConfig = oldConfig || new Map();
     this._config = new Map();
     this._events = new Map();
+    this.config = { value: [] };
   }
 
-  init(config) {
+  setName(name) {
+    this.config.name = name;
+  }
+
+  addConfig(name, type, default, event, options) {
+    this.config.value.push({ name, type, default, event, options });
+  }
+
+  init() {
+    const config = this.config;
     const _this = this;
 
     const configs = [{
       name: 'Alias',
       type: 'string',
       default: 'My ' + config.name,
-      onChange: (value) => {
+      event: (value) => {
         _this.that.name = value;
       }
     }, ... config.value];
@@ -34,9 +44,9 @@ class Controller {
         cfg.default = _this.oldConfig.get(cfg.name);
       }
       _this._config.set(cfg.name, cfg.default);
-      if ('function' === typeof cfg.onChange) {
-        _this._events.set(cfg.name, cfg.onChange);
-        cfg.onChange.call(_this.that, cfg.default);
+      if ('function' === typeof cfg.event) {
+        _this._events.set(cfg.name, cfg.event);
+        cfg.event.call(_this.that, cfg.default);
       }
     });
 

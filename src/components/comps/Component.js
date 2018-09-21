@@ -6,10 +6,10 @@ class Component {
   constructor(oldConfig) {
     this.elem = document.createElement('div');
     this.elem.classList.add('comp');
-    this.controller = new Controller(this, oldConfig);
+    this.ctrl = new Controller(this, oldConfig);
   }
   getConfig(index) {
-    const config = this.controller.getConfig();
+    const config = this.ctrl.getConfig();
     config.set('type', this.type);
     config.set('index', index);
     return config;
@@ -18,11 +18,11 @@ class Component {
     stage.appendChild(this.elem);
   }
   show() {
-    this.controller.show();
+    this.ctrl.show();
   }
   remove() {
     this.elem.remove();
-    this.controller.remove();
+    this.ctrl.remove();
   }
 }
 

@@ -18,8 +18,8 @@
             @keydown.enter="loadNetEaseCloudMusicPlayList($event.target.value)">
           <input type="button" value="remove all" @click="removeAll()">
           <div class="play-list">
-            <div v-for="item in Array.from(files)" :id="item[0]"
-              :class="'list-item' + (item[0] === playing ? ' playing' : '')">
+            <div v-for="item in Array.from(files)" :id="item[0]" class="list-item"
+              :class="{ playing: item[0] === playing }">
               <span class="span-button flex1" :title="item[1].name"
                 v-text="item[1].name" @click="playTrackFrom(item[0])"></span>
               <span class="span-button" title="remove"
@@ -35,8 +35,7 @@
           <input type="button" value="+ Image" @click="addNewComp('Image')">
           <input type="button" value="+ Text" @click="addNewComp('Text')">
           <div class="effect-list">
-            <div v-for="item in comps" class="list-item"
-              @click="item.show()">
+            <div v-for="item in comps" class="list-item" @click="item.show()">
               <span v-text="item.type"></span>
               <span v-text="item.name"></span>
             </div>

@@ -12,75 +12,37 @@ class Spectrum extends Component {
     this.bous = [];
     this.exampleBou = document.createElement('div');
     this.exampleBou.classList.add('spectrum-bou');
-    this.controller.init({
-      name: 'Spectrum Configurations',
-      value: [{
-        name: 'X',
-        type: 'string',
-        default: '0px',
-        onChange: (value) => {
-          this.elem.style.top = value;
-        }
-      }, {
-        name: 'Y',
-        type: 'string',
-        default: '0px',
-        onChange: (value) => {
-          this.elem.style.left = value;
-        }
-      }, {
-        name: 'Main Color',
-        type: 'color',
-        default: '#66ccff',
-        onChange: (value) => {
-          this.exampleBou.style.backgroundColor = value;
-          this.bous.forEach((bou) => {
-            bou.style.backgroundColor = value;
-          });
-        }
-      }, {
-        name: 'Spectrum Height',
-        type: 'string',
-        default: '200px',
-        onChange: (value) => {
-          this.spectrumHeight = parseFloat(value);
-          this.elem.style.height = value;
-          this.elem.style.lineHeight = value;
-        }
-      }, {
-        name: 'Spectrum Width',
-        type: 'string',
-        default: '1000px',
-        onChange: (value) => {
-          this.elem.style.width = value;
-        }
-      }, {
-        name: 'Spectrum Size',
-        type: 'number',
-        default: 64,
-        onChange: (value) => {
-          this.adjustSpectrumSize(value);
-        }
-      }, {
-        name: 'Spectrum Border-Radius',
-        type: 'string',
-        default: '5px',
-        onChange: (value) => {
-          this.bous.forEach((bou) => {
-            bou.style.borderRadius = value;
-          });
-          this.exampleBou.style.borderRadius = value;
-        }
-      }, {
-        name: 'Spectrum Align',
-        type: 'select',
-        options: ['center', 'flex-start', 'flex-end'],
-        default: 0,
-        onChange: (value) => {
-          this.elem.style.alignItems = value;
-        }
-      }]
+
+    this.ctrl.setName('Spectrum Configurations');
+    this.ctrl.addConfig('X', 'number', 0, (value) => {
+      this.elem.style.top = value;
     });
+    this.ctrl.addConfig('Y', 'number', 0, (value) => {
+      this.elem.style.left = value;
+    });
+    this.ctrl.addConfig('Main Color', 'color', '#66ccff', (value) => {
+      this.exampleBou.style.backgroundColor = value;
+      this.bous.forEach((bou) => {
+        bou.style.backgroundColor = value;
+      });
+    });
+    this.ctrl.addConfig('Spectrum Height', 'number', 200, (value) => {
+      this.spectrumHeight = parseFloat(value);
+      this.elem.style.height = value;
+      this.elem.style.lineHeight = value;
+    });
+    this.ctrl.addConfig('Spectrum Width', 'number', 1000, (value) => {
+      this.elem.style.width = value;
+    });
+    this.ctrl.addConfig('Spectrum Size', 'number', 64, (value) => {
+      this.adjustSpectrumSize(value);
+    });
+    this.ctrl.addConfig('Spectrum Align', 'select', 0, (value) => {
+      this.elem.style.alignItems = value;
+    }, ['center', 'flex-start', 'flex-end']);
+
+    this.ctrl.init();
+
   }
 
   adjustSpectrumSize(now) {

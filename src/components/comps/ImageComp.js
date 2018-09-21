@@ -20,89 +20,54 @@ class ImageComp extends Component {
       randomOffset: false,
     };
     this.style = {};
-    this.controller.init({
-      name: 'Image Configurations',
-      value: [{
-        name: 'X',
-        type: 'number',
-        default: 0,
-        onChange: (value) => {
-          this.style.top = value;
-        }
-      }, {
-        name: 'Y',
-        type: 'number',
-        default: 0,
-        onChange: (value) => {
-          this.style.left = value;
-        }
-      }, {
-        name: 'Width',
-        type: 'number',
-        default: 200,
-        onChange: (value) => {
-          this.style.width = value;
-          this.animate.width = value;
-        }
-      }, {
-        name: 'Height',
-        type: 'number',
-        default: 200,
-        onChange: (value) => {
-          this.style.height = value;
-          this.animate.height = value;
-        }
-      }, {
-        name: 'Background Image',
-        type: 'string',
-        default: 'var(--album-cover)',
-        onChange: (value) => {
-          this.style.backgroundImage = value;
-        }
-      }, {
-        name: 'Background Color',
-        type: 'color',
-        default: '#fff',
-        onChange: (value) => {
-          this.style.backgroundColor = value;
-        }
-      }, {
-        name: 'Radius',
-        type: 'string',
-        default: '50%',
-        onChange: (value) => {
-          this.style.borderRadius = value;
-        }
-      }, {
-        name: 'Animation',
-        type: 'multistring',
-        default: 'shake auto-rotate',
-        onChange: (value) => {
-          this.animate.shake = /\bshake\b/i.test(value);
-          this.animate.autoRotate = /\bauto-rotate\b/i.test(value);
-          this.animate.randomOffset = /\brandom-offset\b/i.test(value);
-          const scaleRegex = /scale\(([^\)]+)\)/i;
-          if (scaleRegex.test(value)) {
-            const res = scaleRegex.exec(value);
-            const arg = res[1].split(',').map((x) => parseFloat(x.trim()));
-            if (arg.length === 1) arg.push(arg[0]);
-            this.animate.scaleX = arg[0];
-            this.animate.scaleY = arg[1];
-          } else {
-            this.animate.scaleX = 1;
-            this.animate.scaleY = 1;
-          }
-          const rotateRegex = /rotate\(([^\)]+)\)/i;
-          if (rotateRegex.test(value)) {
-            const res = rotateRegex.exec(value);
-            const arg = parseFloat(res[1]);
-            this.animate.rotate = arg / 180 * Math.PI;
-          } else {
-            this.animate.rotate = 0;
-          }
-        }
-      }]
+
+    this.ctrl.setName('Image Configurations');
+    this.ctrl.addConfig('X', 'number', 0, (value) => { this.style.top  = value; });
+    this.ctrl.addConfig('Y', 'number', 0, (value) => { this.style.left = value; });
+    this.ctrl.addConfig('Width', 'number', 0, (value) => { 
+      this.style.width = value;
+      this.animate.width = value;
     });
+    this.ctrl.addConfig('Height', 'number', 0, (value) => { 
+      this.style.height = value;
+      this.animate.height = value;
+    });
+    this.ctrl.addConfig('Background Image', 'string', 'var(--album-cover)', (value) => {
+      this.style.backgroundImage = value;
+    });
+    this.ctrl.addConfig('Background Color', 'color', '#fff', (value) => {
+      this.style.backgroundColor = value;
+    });
+    this.ctrl.addConfig('Radius', 'string', '50%', (value) => {
+      this.style.borderRadius = value;
+    });
+    this.ctrl.addConfig('Animation', 'multistring', 'shake auto-rotate', (value) => {
+      this.animate.shake = /\bshake\b/i.test(value);
+      this.animate.autoRotate = /\bauto-rotate\b/i.test(value);
+      this.animate.randomOffset = /\brandom-offset\b/i.test(value);
+      const scaleRegex = /scale\(([^\)]+)\)/i;
+      if (scaleRegex.test(value)) {
+        const res = scaleRegex.exec(value);
+        const arg = res[1].split(',').map((x) => parseFloat(x.trim()));
+        if (arg.length === 1) arg.push(arg[0]);
+        this.animate.scaleX = arg[0];
+        this.animate.scaleY = arg[1];
+      } else {
+        this.animate.scaleX = 1;
+        this.animate.scaleY = 1;
+      }
+      const rotateRegex = /rotate\(([^\)]+)\)/i;
+      if (rotateRegex.test(value)) {
+        const res = rotateRegex.exec(value);
+        const arg = parseFloat(res[1]);
+        this.animate.rotate = arg / 180 * Math.PI;
+      } else {
+        this.animate.rotate = 0;
+      }
+    });
+
+    this.ctrl.init();
+
   }
 
   render({ high, cover }, ctx) {

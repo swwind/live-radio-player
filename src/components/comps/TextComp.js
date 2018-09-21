@@ -7,66 +7,33 @@ class TextComp extends Component {
     super(config);
     this.type = 'Text';
     this.elem.classList.add(this.type.toLowerCase());
-    this.controller.init({
-      name: 'Text Configurations',
-      value: [{
-        name: 'X',
-        type: 'string',
-        default: '0px',
-        onChange: (value) => {
-          this.elem.style.top = value;
-        }
-      }, {
-        name: 'Y',
-        type: 'string',
-        default: '0px',
-        onChange: (value) => {
-          this.elem.style.left = value;
-        }
-      }, {
-        name: 'Value',
-        type: 'multistring',
-        default: '%title% (%progress% / %duration%)\nArtist: %artist%\nAlbum: %album%',
-        onChange: (value) => {
-          this.text = value;
-        }
-      }, {
-        name: 'Height',
-        type: 'string',
-        default: '200px',
-        onChange: (value) => {
-          this.elem.style.height = value;
-        }
-      }, {
-        name: 'Width',
-        type: 'string',
-        default: '1000px',
-        onChange: (value) => {
-          this.elem.style.width = value;
-        }
-      }, {
-        name: 'Color',
-        type: 'color',
-        default: '#000000',
-        onChange: (value) => {
-          this.elem.style.color = value;
-        }
-      }, {
-        name: 'Font Size',
-        type: 'string',
-        default: '16px',
-        onChange: (value) => {
-          this.elem.style.fontSize = value;
-        }
-      }, {
-        name: 'Font Family',
-        type: 'string',
-        default: 'Arial',
-        onChange: (value) => {
-          this.elem.style.fontFamily = value;
-        }
-      }]
+
+    this.ctrl.setName('Text Configurations');
+    this.ctrl.addConfig('X', 'number', 0, (value) => {
+      this.elem.style.top = value;
     });
+    this.ctrl.addConfig('Y', 'number', 0, (value) => {
+      this.elem.style.left = value;
+    });
+    this.ctrl.addConfig('Height', 'number', 200, (value) => {
+      this.elem.style.height = value;
+    });
+    this.ctrl.addConfig('Width', 'number', 1000, (value) => {
+      this.elem.style.width = value;
+    });
+    this.ctrl.addConfig('Value', 'multistring', '%title%', (value) => {
+      this.text = value;
+    });
+    this.ctrl.addConfig('Color', 'color', '#000', (value) => {
+      this.elem.style.color = value;
+    })
+    this.ctrl.addConfig('Font Size', 'number', 16, (value) => {
+      this.elem.style.fontSize = value;
+    })
+    this.ctrl.addConfig('Font Family', 'string', 'Arial', (value) => {
+      this.elem.style.fontFamily = value;
+    });
+    this.ctrl.init();
   }
 
   render(cfg) {
