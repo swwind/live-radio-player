@@ -95,15 +95,6 @@ const randomItem = (arr) => {
   return arr[rand(arr.length)];
 }
 
-const createImage = (src) => {
-  return new Promise((resolve, reject) => {
-    const image = new Image();
-    image.src = src;
-    image.addEventListener('load', e => resolve(image));
-    image.addEventListener('error', e => reject(e));
-  });
-}
-
 const canvasTransform = (x, y, w, h, r, sx, sy) => {
   const sin = Math.sin(r);
   const cos = Math.cos(r);
@@ -119,6 +110,5 @@ module.exports = {
   randomItem,
   randomToken,
   randomLinearFunction,
-  createImage,
   canvasTransform,
 }

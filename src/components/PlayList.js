@@ -9,10 +9,22 @@ const $$ = (name) => document.getElementById(name);
 const Vue = require('../dist/vue.min.js');
 const template = require('./playlist.vue');
 
-const { randomToken, randomItem, createImage } = require('../util.js');
+const { randomToken, randomItem } = require('../util.js');
 
 const backend = require('../backend');
 const jsmediatags = require('jsmediatags');
+
+const defaultCover = new Image();
+defaultCover.src = './img/default-cover.svg';
+
+const createImage = (src) => {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    image.src = src;
+    image.addEventListener('load', e => resolve(image));
+    image.addEventListener('error', e => resolve(defaultCover));
+  });
+}
 
 const parseTrackInfoFromFile = (file) => {
   const arrayToBase64 = (arr) => {
@@ -55,9 +67,6 @@ const parseTrackInfoFromNetEaseCloudMusic = (id, title) => {
     });
   });
 }
-
-const defaultCover = new Image();
-defaultCover.src = './img/default-cover.svg';
 
 module.exports = () => new Vue({
   el: '#play-list',

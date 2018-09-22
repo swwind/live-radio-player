@@ -55,8 +55,8 @@ class Controller {
         values: _this._config,
         title: 'Hello world',
         show: false,
-        top: 300,
-        left: 700,
+        top: 100,
+        left: 200,
         draging: false,
       },
       methods: {

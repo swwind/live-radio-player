@@ -10,9 +10,13 @@
     </div>
   </div>
   <div class="buttons">
-    <input type="button" value="Move Up" @click="moveUp(selecting)" :disabled="!selecting">
-    <input type="button" value="Move Down" @click="moveDown(selecting)" :disabled="!selecting">
-    <input type="button" value="Config" @click="selecting.show()" :disabled="!selecting">
-    <input type="button" value="Remove" @click="removeComp(selecting)" :disabled="!selecting">
+    <input type="button" :disabled="!selecting" @click="moveUp(selecting)"
+      class="fa-button" style="background-image: url(./svgs/solid/chevron-up.svg);">
+    <input type="button" :disabled="!selecting" @click="moveDown(selecting)"
+      class="fa-button" style="background-image: url(./svgs/solid/chevron-down.svg);">
+    <input type="button" :disabled="!selecting" @click="selecting.show()"
+      class="fa-button" style="background-image: url(./svgs/solid/cog.svg);">
+    <input type="button" :disabled="!selecting" @click="removeComp(selecting)"
+      class="fa-button" style="background-image: url(./svgs/solid/trash-alt.svg);">
   </div>
 </div>

@@ -38,7 +38,7 @@ class ImageComp extends Component {
     this.ctrl.addConfig('Background Image', 'string', 'var(--album-cover)', (value) => {
       this.style.backgroundImage = value;
     });
-    this.ctrl.addConfig('Background Color', 'color', '#fff', (value) => {
+    this.ctrl.addConfig('Background Color', 'color', '#ffffff', (value) => {
       this.style.backgroundColor = value;
     });
     this.ctrl.addConfig('Radius', 'checkbox', true, (value) => {

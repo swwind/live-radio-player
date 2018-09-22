@@ -19,7 +19,7 @@ class TextComp extends Component {
     this.ctrl.addConfig('Value', 'multistring', '%title%', (value) => {
       this.style.text = value;
     });
-    this.ctrl.addConfig('Color', 'color', '#000', (value) => {
+    this.ctrl.addConfig('Color', 'color', '#000000', (value) => {
       this.style.color = value;
     })
     this.ctrl.addConfig('Font Size', 'number', 16, (value) => {
