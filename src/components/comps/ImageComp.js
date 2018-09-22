@@ -92,6 +92,23 @@ class ImageComp extends Component {
     }
     const deg = this.animate.autoRotate ? - new Date() / 3000 : this.animate.rotate;
 
+    const rw = cover.width;
+    const rh = cover.height;
+    let offsetw = 0;
+    let offseth = 0;
+    let aw = rw;
+    let ah = rh;
+
+    if (rw / rh > w / h) {
+      // the picture is longer than we want
+      offsetw = (rw - w / h * rh) / 2;
+      aw = w / h * rh;
+    } else {
+      offseth = (rh - h / w * rw) / 2;
+      ah = h / w * rw;
+    }
+
+    // console.log(w, h, rw, rh, offsetw, offseth, aw, ah);
 
     if (this.style.borderRadius) {
 
@@ -101,12 +118,12 @@ class ImageComp extends Component {
       ctx.arc(x + w / 2, y + h / 2, Math.min(w, h) / 2, 0, Math.PI * 2);
       ctx.closePath();
       ctx.clip();
-      ctx.drawImage(cover, x, y, w, h);
+      ctx.drawImage(cover, offsetw, offseth, aw, ah, x, y, w, h);
 
     } else {
 
       ctx.setTransform(...canvasTransform(x, y, w, h, deg, scaleX, scaleY));
-      ctx.drawImage(cover, x, y, w, h);
+      ctx.drawImage(cover, offsetw, offseth, aw, ah, x, y, w, h);
 
     }
 

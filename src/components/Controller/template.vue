@@ -16,7 +16,7 @@
       <input v-if="cfg.type === 'color'" type="color"
         @input="change(cfg.name, $event.target.value)" :value="values.get(cfg.name)">
       <input v-if="cfg.type === 'checkbox'" type="checkbox"
-        @input="change(cfg.name, $event.target.checked)" :checked="values.get(cfg.name)">
+        @change="change(cfg.name, $event.target.checked)" :checked="values.get(cfg.name)">
       <textarea v-if="cfg.type === 'multistring'" v-text="values.get(cfg.name)"
         @input="change(cfg.name, $event.target.value)">
       </textarea>

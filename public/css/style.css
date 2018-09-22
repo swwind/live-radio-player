@@ -38,7 +38,7 @@
   position: relative;
 }
 .list-item:hover {
-  background-color: #00000010;
+  background-color: rgba(0, 0, 0, 0.0625);
   transition: background-color .1s;
 }
 .list-item span {
@@ -48,7 +48,7 @@
   content: "";
   width: 0;
   height: 100%;
-  background-color: #00000030;
+  background-color: rgba(0, 0, 0, 0.1875);
   position: absolute;
   transition: width .2s;
 }
@@ -57,7 +57,7 @@
   transition: width .2s;
 }
 .list-item.selected {
-  background-color: #00000020;
+  background-color: rgba(0, 0, 0, 0.125);
 }
 .effect-type {
   width: 100px;
@@ -117,7 +117,7 @@ body, html {
   width: 40px;
   background-repeat: no-repeat;
   background-position: center;
-  background-color: #00000000;
+  background-color: transparent;
   background-origin: content-box;
   border: none;
   cursor: pointer;
@@ -131,24 +131,24 @@ body, html {
 .fa-button[disabled] {
   cursor: default;
   opacity: .3;
-  background-color: #00000000;
+  background-color: transparent;
   transition: all .1s;
 }
 .fa-button[disabled]:hover {
   opacity: .3;
-  background-color: #00000000;
+  background-color: transparent;
   transition: all .1s;
 }
 .fa-button:hover {
-  background-color: #00000020;
+  background-color: rgba(0, 0, 0, 0.125);
   transition: all .1s;
 }
 .fa-button:focus {
-  background-color: #00000030;
+  background-color: rgba(0, 0, 0, 0.1875);
   transition: all .1s;
 }
 .fa-button:active {
-  background-color: #00000040;
+  background-color: rgba(0, 0, 0, 0.25);
   box-shadow: inset 0 0 10px #222;
   transition: all .1s;
 }

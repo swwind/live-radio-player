@@ -3,8 +3,8 @@
   <input type="button" value="+ Image" @click="addNewComp('Image')">
   <input type="button" value="+ Text" @click="addNewComp('Text')">
   <div class="effect-list" @click="selecting = null">
-    <div v-for="item in comps" @click="$event.stopPropagation(), selecting = item" class="list-item"
-      :class="{ selected: item === selecting }">
+    <div v-for="item in comps" @click="$event.stopPropagation(), selecting = item"
+      class="list-item" :class="{ selected: item === selecting }">
       <span v-text="item.type" class="effect-type"></span>
       <span v-text="item.name"></span>
     </div>
