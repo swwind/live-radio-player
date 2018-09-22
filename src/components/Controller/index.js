@@ -53,7 +53,7 @@ class Controller {
       data: {
         configs,
         values: _this._config,
-        title: 'Hello world',
+        title: config.name,
         show: false,
         top: 100,
         left: 200,
@@ -75,7 +75,7 @@ class Controller {
   }
 
   show() {
-    this.elem.show = true;
+    this.elem.show = !this.elem.show;
   }
 
   remove() {

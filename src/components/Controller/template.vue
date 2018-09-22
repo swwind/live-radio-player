@@ -1,4 +1,5 @@
-<div class="sub-window" v-show="show" :style="{ top: top + 'px', left: left + 'px' }">
+<div class="sub-window" v-show="show" :style="{ top: top + 'px', left: left + 'px' }"
+  :class="{ moving: draging }">
   <div class="sw-statebar">
     <span class="sw-title" v-text="title" @mouseleave="draging = false"
       @mousedown="draging = true" @mouseup="draging = false"
@@ -7,7 +8,7 @@
   </div>
   <div class="sw-container">
     <div v-for="cfg in configs" :class="'c-' + cfg.type">
-      <span v-text="cfg.name + ': '"></span>
+      <span v-text="cfg.name + ':'"></span>
       <input v-if="cfg.type === 'string'" type="string"
         @input="change(cfg.name, $event.target.value)" :value="values.get(cfg.name)">
       <input v-if="cfg.type === 'number'" type="number"

@@ -24,6 +24,7 @@
   flex: 1;
   cursor: move;
   padding: 5px 10px;
+  line-height: 22px;
 }
 .sub-window .sw-statebar .sw-close {
   padding: 5px 10px;
@@ -48,6 +49,9 @@
   display: flex;
   justify-content: space-between;
   margin: 0 0 5px 0;
+}
+.sw-container span {
+  line-height: 25px;
 }
 .sw-container .c-multistring {
   display: block;

@@ -47,6 +47,9 @@ module.exports = () => new Vue({
     removeComp(comp) {
       let index = this.comps.indexOf(comp);
       this.comps = [...this.comps.slice(0, index), ...this.comps.slice(index + 1)];
+      if (this.selecting === comp) {
+        this.selecting = null;
+      }
     },
 
     moveUp(comp) {

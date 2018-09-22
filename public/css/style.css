@@ -129,13 +129,14 @@ body, html {
   transition: all .1s;
 }
 .fa-button[disabled] {
+  cursor: default;
   opacity: .3;
   background-color: #00000000;
   transition: all .1s;
 }
 .fa-button[disabled]:hover {
   opacity: .3;
-  background-color: #00000020;
+  background-color: #00000000;
   transition: all .1s;
 }
 .fa-button:hover {
