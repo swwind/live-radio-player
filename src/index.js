@@ -9,13 +9,34 @@ require.extensions['.vue'] = (module, filename) => {
 const $ = (name) => document.querySelector(name);
 const $$ = (name) => document.getElementById(name);
 
-const PlayList = require('./components/PlayList.js');
-const Viewer = require('./components/Viewer.js');
+const playlist = require('./components/playlist.js');
+const viewer = require('./components/viewer.js');
 
+const _player = playlist();
+const _viewer = viewer();
+
+if (localStorage.getItem('viewer cache')) {
+  _viewer.importConfig(localStorage.getItem('viewer cache'));
+}
+if (localStorage.getItem('player cache')) {
+  _player.importList(localStorage.getItem('player cache'));
+}
+
+// save configurations to local
+setInterval(() => {
+  localStorage.setItem('viewer cache', _viewer.exportConfig());
+  localStorage.setItem('player cache', _player.exportList());
+}, 1000);
+
+// render interval
+const draw = (time) => {
+  _viewer.render(_player.getInfo());
+  requestAnimationFrame(draw);
+}
+draw();
+
+// bind key
 const dashboard = $('.dashboard');
-
-const playList = PlayList();
-
 window.addEventListener('keydown', (e) => {
   if (e.ctrlKey && e.code === 'Enter') {
     e.preventDefault();
@@ -23,27 +44,3 @@ window.addEventListener('keydown', (e) => {
     document.body.classList.toggle('hide-cursor');
   }
 });
-
-
-const viewer = Viewer();
-
-// viewer cache
-if (localStorage.getItem('viewer cache')) {
-  viewer.importConfig(localStorage.getItem('viewer cache'));
-}
-if (localStorage.getItem('player cache')) {
-  playList.importList(localStorage.getItem('player cache'));
-}
-
-// save configurations to local
-setInterval(() => {
-  localStorage.setItem('viewer cache', viewer.exportConfig());
-  localStorage.setItem('player cache', playList.exportList());
-}, 1000);
-
-// render interval
-const draw = (time) => {
-  viewer.render(playList.getInfo());
-  requestAnimationFrame(draw);
-}
-draw();

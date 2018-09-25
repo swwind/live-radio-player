@@ -1,3 +1,5 @@
+'use strict';
+
 const randomString = (pattern, length) => {
   return Array.apply(null, {length: length}).map(() => (pattern[Math.floor(Math.random() * pattern.length)])).join('');
 }
