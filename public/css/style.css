@@ -2,12 +2,14 @@
   margin: 80px;
   background: rgba(255, 255, 255, .5);
   border: 2px solid #ccc;
+}
+.row-flex {
   display: flex;
 }
 .flex1 {
   flex: 1;
 }
-.dashboard > div.flex1 {
+.tracks, .effects {
   margin: 20px;
 }
 .span-button {

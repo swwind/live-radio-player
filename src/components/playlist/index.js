@@ -6,12 +6,12 @@ const path = require('path');
 const $ = (name) => document.querySelector(name);
 const $$ = (name) => document.getElementById(name);
 
-const Vue = require('../dist/vue.min.js');
-const template = require('./playlist.vue');
+const Vue = require('../../dist/vue.min.js');
+const template = require('./template.vue');
 
-const { randomToken, randomItem } = require('../util.js');
+const { randomToken, randomItem } = require('../../util.js');
 
-const backend = require('../backend');
+const backend = require('../../backend');
 const jsmediatags = require('jsmediatags');
 
 const defaultCover = new Image();
@@ -68,9 +68,8 @@ const parseTrackInfoFromNetEaseCloudMusic = (id, title) => {
   });
 }
 
-module.exports = () => new Vue({
-  el: '#play-list',
-  template,
+module.exports = (el) => new Vue({
+  el, template,
   data: {
     files: new Map(),
     trackInfo: {},

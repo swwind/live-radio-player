@@ -3,20 +3,19 @@
 const $ = (name) => document.querySelector(name);
 const $$ = (name) => document.getElementById(name);
 
-const { resolveTime } = require('../util.js');
+const { resolveTime } = require('../../util.js');
 
-const Vue = require('../dist/vue.min.js');
-const template = require('./viewer.vue');
+const Vue = require('../../dist/vue.min.js');
+const template = require('./template.vue');
 
 const cmps = {
-  'Text': require('./comps/TextComp.js'),
-  'Image': require('./comps/ImageComp.js'),
-  'Spectrum': require('./comps/Spectrum.js'),
+  'Text': require('../comps/TextComp.js'),
+  'Image': require('../comps/ImageComp.js'),
+  'Spectrum': require('../comps/Spectrum.js'),
 }
 
-module.exports = () => new Vue({
-  el: '#effect-list',
-  template,
+module.exports = (el) => new Vue({
+  el, template,
   data: {
     comps: [],
     selecting: null,

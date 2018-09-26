@@ -9,11 +9,11 @@ require.extensions['.vue'] = (module, filename) => {
 const $ = (name) => document.querySelector(name);
 const $$ = (name) => document.getElementById(name);
 
-const playlist = require('./components/playlist.js');
-const viewer = require('./components/viewer.js');
+const playlist = require('./components/playlist');
+const viewer = require('./components/viewer');
 
-const _player = playlist();
-const _viewer = viewer();
+const _player = playlist('#play-list');
+const _viewer = viewer('#effect-list');
 
 if (localStorage.getItem('viewer cache')) {
   _viewer.importConfig(localStorage.getItem('viewer cache'));
@@ -21,6 +21,9 @@ if (localStorage.getItem('viewer cache')) {
 if (localStorage.getItem('player cache')) {
   _player.importList(localStorage.getItem('player cache'));
 }
+
+const rtmp = require('./components/rtmp');
+const _rtmp = rtmp('#rtmp', _viewer.stage);
 
 // save configurations to local
 setInterval(() => {

@@ -288,8 +288,8 @@ const linearSmooth7 = (arr) => {
   }
   let newArr = [];
 
-  newArr[0] = (13 * arr[0] + 10 * arr[1] + 7 * arr[2] + 4 * arr[3] + arr[4] - 2 * arr[5] - 5 * arr[6]) / 28;
-  newArr[1] = (5 * arr[0] + 4 * arr[1] + 3 * arr[2] + 2 * arr[3] + arr[4] - arr[6]) / 14;
+  newArr[0] = (13 * arr[0] + 10 * arr[1] + 7 * arr[2] + 4 * arr[3] + arr[4]) / 35;
+  newArr[1] = (5 * arr[0] + 4 * arr[1] + 3 * arr[2] + 2 * arr[3] + arr[4]) / 15;
   newArr[2] = (7 * arr[0] + 6 * arr [1] + 5 * arr[2] + 4 * arr[3] + 3 * arr[4] + 2 * arr[5] + arr[6]) / 28;
 
   for (let i = 3; i < n - 3; ++ i) {
@@ -297,8 +297,8 @@ const linearSmooth7 = (arr) => {
   }
 
   newArr[n - 3] = (7 * arr[n - 1] + 6 * arr [n - 2] + 5 * arr[n - 3] + 4 * arr[n - 4] + 3 * arr[n - 5] + 2 * arr[n - 6] + arr[n - 7]) / 28;
-  newArr[n - 2] = (5 * arr[n - 1] + 4 * arr[n - 2] + 3 * arr[n - 3] + 2 * arr[n - 4] + arr[n - 5] - arr[n - 7]) / 14;
-  newArr[n - 1] = (13 * arr[n - 1] + 10 * arr[n - 2] + 7 * arr[n - 3] + 4 * arr[n - 4] + arr[n - 5] - 2 * arr[n - 6] - 5 * arr[n - 7]) / 28;
+  newArr[n - 2] = (5 * arr[n - 1] + 4 * arr[n - 2] + 3 * arr[n - 3] + 2 * arr[n - 4] + arr[n - 5]) / 15;
+  newArr[n - 1] = (13 * arr[n - 1] + 10 * arr[n - 2] + 7 * arr[n - 3] + 4 * arr[n - 4] + arr[n - 5]) / 35;
 
   return newArr;
 }
