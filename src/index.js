@@ -23,7 +23,9 @@ if (localStorage.getItem('player cache')) {
 }
 
 const rtmp = require('./components/rtmp');
-const _rtmp = rtmp('#rtmp', _viewer.stage);
+const _rtmp = rtmp('#rtmp', _viewer.stage, _player.destination.stream);
+
+window._player = _player;
 
 // save configurations to local
 setInterval(() => {
@@ -47,3 +49,4 @@ window.addEventListener('keydown', (e) => {
     document.body.classList.toggle('hide-cursor');
   }
 });
+

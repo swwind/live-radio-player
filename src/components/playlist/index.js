@@ -74,13 +74,17 @@ module.exports = (el) => new Vue({
     files: new Map(),
     trackInfo: {},
     playing: '',
+    playlist_id: 737739259,
   },
   created() {
+    // Do not ask me how these function works.
     this.audioElement = $('audio');
     this.audioContext = new AudioContext();
     this.analyser = this.audioContext.createAnalyser();
     this.audioSrc = this.audioContext.createMediaElementSource(this.audioElement);
+    this.destination = this.audioContext.createMediaStreamDestination();
     this.audioSrc.connect(this.analyser);
+    this.audioSrc.connect(this.destination);
     this.analyser.connect(this.audioContext.destination);
     this.analyser.fftSize = 16384;
     this.analyser.smoothingTimeConstant = 0.3;
@@ -220,8 +224,8 @@ module.exports = (el) => new Vue({
       };
     },
 
-    loadNetEaseCloudMusicPlayList(id) {
-      backend.netease.playlist(id).then((res) => {
+    loadPlayList() {
+      backend.netease.playlist(this.playlist_id).then((res) => {
         res.playlist.tracks.map((track) => {
           this.addTrackFromUrl(
             `https://music.163.com/song/media/outer/url?id=${track.id}.mp3`,

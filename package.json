@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "big-integer": "^1.6.34",
+    "blob-to-buffer": "^1.2.8",
     "jsmediatags": "^3.8.1",
     "request": "^2.88.0"
   }

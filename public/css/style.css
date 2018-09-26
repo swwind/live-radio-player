@@ -2,16 +2,9 @@
   margin: 80px;
   background: rgba(255, 255, 255, .5);
   border: 2px solid #ccc;
+  padding: 20px;
 }
-.row-flex {
-  display: flex;
-}
-.flex1 {
-  flex: 1;
-}
-.tracks, .effects {
-  margin: 20px;
-}
+
 .span-button {
   cursor: pointer;
   padding: 0 10px;
@@ -28,7 +21,7 @@
   user-select: none;
 }
 
-.list-item {
+.item {
   cursor: pointer;
   height: 30px;
   line-height: 30px;
@@ -39,14 +32,14 @@
   font-family: sans-serif;
   position: relative;
 }
-.list-item:hover {
+.item:hover {
   background-color: rgba(0, 0, 0, 0.0625);
   transition: background-color .1s;
 }
-.list-item span {
+.item span {
   padding: 0 10px;
 }
-.list-item:before {
+.item:before {
   content: "";
   width: 0;
   height: 100%;
@@ -54,12 +47,17 @@
   position: absolute;
   transition: width .2s;
 }
-.list-item.playing:before {
+.item.playing:before {
   width: 5px;
   transition: width .2s;
 }
-.list-item.selected {
+.item.selected {
   background-color: rgba(0, 0, 0, 0.125);
+}
+.right-float {
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 .effect-type {
   width: 100px;
@@ -84,74 +82,5 @@ body, html {
 
 .stage {
   position: fixed;
-  width: 100vw;
-  height: 100vh;
-  top: 0;
-  left: 0;
-  z-index: -1;
-}
-.stage .comp {
-  display: block;
-  position: absolute;
-}
-.stage .spectrum {
-  display: flex;
-  flex-flow: row nowrap;
-  width: 500px;
-  justify-content: space-between;
-}
-.stage .spectrum .spectrum-bou {
-  display: inline-block;
-  width: 10px;
-  background-color: #66ccff;
-}
-.stage .image {
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
-  animation-iteration-count: infinite;
-  animation-timing-function: linear;
-  transition: background-image 2s;
-}
-
-.fa-button {
-  height: 40px;
-  width: 40px;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-color: transparent;
-  background-origin: content-box;
-  border: none;
-  cursor: pointer;
-  border-radius: 50%;
-  margin-right: 10px;
-  padding: 10px;
-  opacity: .7;
-  outline: none;
-  transition: all .1s;
-}
-.fa-button[disabled] {
-  cursor: default;
-  opacity: .3;
-  background-color: transparent;
-  transition: all .1s;
-}
-.fa-button[disabled]:hover {
-  opacity: .3;
-  background-color: transparent;
-  transition: all .1s;
-}
-.fa-button:hover {
-  background-color: rgba(0, 0, 0, 0.125);
-  transition: all .1s;
-}
-.fa-button:focus {
-  background-color: rgba(0, 0, 0, 0.1875);
-  transition: all .1s;
-}
-.fa-button:active {
-  background-color: rgba(0, 0, 0, 0.25);
-  box-shadow: inset 0 0 10px #222;
-  transition: all .1s;
 }
 

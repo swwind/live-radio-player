@@ -73,7 +73,8 @@ module.exports = (el) => new Vue({
       state.frequency = state.frequency;
       state.duration = resolveTime(state.duration);
       state.progress = resolveTime(state.progress);
-      this.ctx.clearRect(0, 0, this.stage.width, this.stage.height);
+      this.ctx.fillStyle = '#ffffff';
+      this.ctx.fillRect(0, 0, this.stage.width, this.stage.height);
       this.comps.forEach((comp) => {
         this.ctx.save();
         comp.render(state, this.ctx);

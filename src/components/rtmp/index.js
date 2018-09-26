@@ -1,15 +1,16 @@
 'use strict';
 
 const { spawn } = require('child_process');
+const blob2buffer = require('blob-to-buffer');
 
 const Vue = require('../../dist/vue.min.js');
 const template = require('./template.vue');
 
-module.exports = (el, canvas) => new Vue({
+module.exports = (el, canvas, audio) => new Vue({
   el, template,
   data: {
     living: false,
-    server: '',
+    server: 'rtmp://10.176.20.48:1935/live/video',
     fps: 30,
     vbits: 3000000,
     abits: 44100,
@@ -20,8 +21,6 @@ module.exports = (el, canvas) => new Vue({
   methods: {
     startLive() {
 
-      this.living = true;
-
       this.ffmpeg = spawn('ffmpeg', [
         '-i', '-',
         '-vcodec', 'copy',
@@ -30,25 +29,31 @@ module.exports = (el, canvas) => new Vue({
         this.server
       ]);
 
-      const mediaStream = canvas.captureStream(this.fps);
+      const mediaStream = new MediaStream();
+      canvas.captureStream(this.fps).getTracks().forEach(mediaStream.addTrack.bind(mediaStream));
+      audio.getTracks().forEach(mediaStream.addTrack.bind(mediaStream));
 
       const mediaRecorder = new MediaRecorder(mediaStream, {
         mimeType: 'video/webm;codecs=h264',
+        videoBitsPerSecond: this.vbits,
         audioBitsPerSecond: this.abits,
-        videoBitsPerSecond: this.vbits
       });
 
       mediaRecorder.addEventListener('dataavailable', (e) => {
-        new Response(e.data).arrayBuffer().then((data) => {
-          this.ffmpeg.stdin.write(data);
+        blob2buffer(e.data, (err, buffer) => {
+          !err && this.ffmpeg.stdin.write(buffer);
         });
       });
+
+      mediaRecorder.start(1000);
 
       this.ffmpeg.on('close', (e) => {
         this.ffmpeg = null;
         this.living = false;
         mediaRecorder.stop();
       });
+
+      this.living = true;
     },
 
     stopLive() {

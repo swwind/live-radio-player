@@ -1,27 +1,24 @@
 <div>
-  <input type="button" value="+ Spectrum" @click="addNewComp('Spectrum')">
-  <input type="button" value="+ Image" @click="addNewComp('Image')">
-  <input type="button" value="+ Text" @click="addNewComp('Text')">
+  <button class="ui button" @click="addNewComp('Spectrum')">+ Spectrum</button>
+  <button class="ui button" @click="addNewComp('Image')">+ Image</button>
+  <button class="ui button" @click="addNewComp('Text')">+ Text</button>
   <div class="effect-list" @click="selecting = null">
     <div v-for="item in comps" @click="$event.stopPropagation(), selecting = item"
-      class="list-item" :class="{ selected: item === selecting }">
+      class="item" :class="{ selected: item === selecting }">
       <span v-text="item.type" class="effect-type"></span>
       <span v-text="item.name"></span>
     </div>
   </div>
-  <div class="buttons">
-
-    <input type="button" :disabled="!selecting" @click="moveUp(selecting)"
-      class="fa-button" style="background-image: url(./svgs/solid/chevron-up.svg);">
-
-    <input type="button" :disabled="!selecting" @click="moveDown(selecting)"
-      class="fa-button" style="background-image: url(./svgs/solid/chevron-down.svg);">
-
-    <input type="button" :disabled="!selecting" @click="selecting.show()"
-      class="fa-button" style="background-image: url(./svgs/solid/cog.svg);">
-
-    <input type="button" :disabled="!selecting" @click="removeComp(selecting)"
-      class="fa-button" style="background-image: url(./svgs/solid/trash-alt.svg);">
-
-  </div>
+  <button class="circular ui icon button" :disabled="!selecting" @click="moveUp(selecting)">
+    <i class="icon chevron up"></i>
+  </button>
+  <button class="circular ui icon button" :disabled="!selecting" @click="moveDown(selecting)">
+    <i class="icon chevron down"></i>
+  </button>
+  <button class="circular ui icon button" :disabled="!selecting" @click="selecting.show()">
+    <i class="icon cog"></i>
+  </button>
+  <button class="circular ui icon button" :disabled="!selecting" @click="removeComp(selecting)">
+    <i class="icon trash alternate"></i>
+  </button>
 </div>

@@ -9,7 +9,7 @@
   <div class="sw-container">
     <div v-for="cfg in configs" :class="'c-' + cfg.type">
       <span v-text="cfg.name + ':'"></span>
-      <input v-if="cfg.type === 'string'" type="string"
+      <input v-if="cfg.type === 'string'" type="text"
         @input="change(cfg.name, $event.target.value)" :value="values.get(cfg.name)">
       <input v-if="cfg.type === 'number'" type="number"
         @input="change(cfg.name, + $event.target.value)" :value="values.get(cfg.name)">
