@@ -234,6 +234,17 @@ module.exports = (el) => new Vue({
       }, (err) => {
         alert('Error loading playlist\nPlease try again or send issues to us.');
       });
+    },
+
+    handleSelectFiles() {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.multiple = true;
+      input.accept = 'audio/*';
+      input.addEventListener('input', (e) => {
+        this.addTrackFromFiles(input.files)
+      });
+      input.click();
     }
   }
 });

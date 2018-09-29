@@ -9,11 +9,24 @@ require.extensions['.vue'] = (module, filename) => {
 const $ = (name) => document.querySelector(name);
 const $$ = (name) => document.getElementById(name);
 
+/*
+          MediaStream                     Draw on
+PlayList -------------> RTMP(canvas) <--------------- Viewer
+*/
+
 const playlist = require('./components/playlist');
 const viewer = require('./components/viewer');
+const rtmp = require('./components/rtmp');
 
 const _player = playlist('#play-list');
-const _viewer = viewer('#effect-list');
+
+const _rtmp = rtmp('#rtmp', _player.destination.stream);
+
+const _viewer = viewer('#effect-list', _rtmp.canvas);
+
+window._rtmp = _rtmp;
+window._player = _player;
+window._viewer = _viewer;
 
 if (localStorage.getItem('viewer cache')) {
   _viewer.importConfig(localStorage.getItem('viewer cache'));
@@ -22,10 +35,6 @@ if (localStorage.getItem('player cache')) {
   _player.importList(localStorage.getItem('player cache'));
 }
 
-const rtmp = require('./components/rtmp');
-const _rtmp = rtmp('#rtmp', _viewer.stage, _player.destination.stream);
-
-window._player = _player;
 
 // save configurations to local
 setInterval(() => {

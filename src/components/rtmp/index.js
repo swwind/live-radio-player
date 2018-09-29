@@ -6,7 +6,9 @@ const blob2buffer = require('blob-to-buffer');
 const Vue = require('../../dist/vue.min.js');
 const template = require('./template.vue');
 
-module.exports = (el, canvas, audio) => new Vue({
+// const { remote } = require('electron');
+
+module.exports = (el, audio) => new Vue({
   el, template,
   data: {
     living: false,
@@ -14,11 +16,27 @@ module.exports = (el, canvas, audio) => new Vue({
     fps: 30,
     vbits: 3000000,
     abits: 44100,
+    rstx: 1920,
+    rsty: 1080,
   },
   created() {
     this.ffmpeg = null;
+
+    this.canvas = document.createElement('canvas');
+    this.canvas.classList.add('stage');
+    document.body.insertBefore(this.canvas, document.body.firstChild);
+    this.handleResize();
+
+    // fuck electron
+    // this.newWindow = window.open('', 'Preview', 'menubar=no,toolbar=no,location=no,directories=no,scrollbars=no,status=no,resizable=no');
+
   },
   methods: {
+    resize(w, h) {
+      this.canvas.width = w;
+      this.canvas.height = h;
+    },
+
     startLive() {
 
       this.ffmpeg = spawn('ffmpeg', [
@@ -66,6 +84,10 @@ module.exports = (el, canvas, audio) => new Vue({
       } else {
         this.startLive();
       }
+    },
+
+    handleResize() {
+      this.resize(this.rstx, this.rsty);
     }
   }
 })

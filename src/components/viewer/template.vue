@@ -1,7 +1,9 @@
 <div>
-  <button class="ui button" @click="addNewComp('Spectrum')">+ Spectrum</button>
-  <button class="ui button" @click="addNewComp('Image')">+ Image</button>
-  <button class="ui button" @click="addNewComp('Text')">+ Text</button>
+  <div class="ui buttons">
+    <button class="ui button" @click="addNewComp('Spectrum')">Spectrum</button>
+    <button class="ui button" @click="addNewComp('Image')">Image</button>
+    <button class="ui button" @click="addNewComp('Text')">Text</button>
+  </div>
   <div class="effect-list" @click="selecting = null">
     <div v-for="item in comps" @click="$event.stopPropagation(), selecting = item"
       class="item" :class="{ selected: item === selecting }">

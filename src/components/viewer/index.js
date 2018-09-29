@@ -14,23 +14,15 @@ const cmps = {
   'Spectrum': require('../comps/Spectrum.js'),
 }
 
-module.exports = (el) => new Vue({
+module.exports = (el, canvas) => new Vue({
   el, template,
   data: {
     comps: [],
     selecting: null,
   },
   created() {
-    this.stage = document.createElement('canvas');
-    this.stage.classList.add('stage');
+    this.stage = canvas;
     this.ctx = this.stage.getContext('2d');
-    this.stage.width  = window.innerWidth;
-    this.stage.height = window.innerHeight;
-    window.addEventListener('resize', (e) => {
-      this.stage.width  = window.innerWidth;
-      this.stage.height = window.innerHeight;
-    });
-    document.body.insertBefore(this.stage, document.body.firstChild);
   },
   methods: {
 

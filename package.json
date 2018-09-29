@@ -1,7 +1,7 @@
 {
   "name": "live-radio-player",
   "version": "v0.0.1",
-  "main": "app.js",
+  "main": "main.js",
   "scripts": {
     "start": "electron ."
   },
